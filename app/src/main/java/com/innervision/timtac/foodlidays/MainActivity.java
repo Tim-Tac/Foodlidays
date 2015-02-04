@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -15,6 +18,30 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        EditText login = (EditText)findViewById(R.id.login);
+        EditText password= (EditText)findViewById(R.id.password);
+        Button connexion= (Button)findViewById(R.id.connexion);
+        Button connexionqr = (Button)findViewById(R.id.connexionQR);
+
+
+        connexion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"pas encore dispo",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        connexionqr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"pas encore dispo",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
     }
 
 

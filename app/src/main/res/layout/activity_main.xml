@@ -4,25 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/backg"
+    android:background="@drawable/bg_food"
     tools:context=".MainActivity">
 
-   <!-- <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/backg">-->
-
-   <!-- <EditText
+   <EditText
         android:id="@+id/login"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="50dp"
+        android:layout_gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:background="#444444"
         android:alpha="0.7"
         android:layout_marginTop="50dp"
-        android:hint="login"
+        android:hint="identifiant"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
         android:textColorHighlight="#FF0000"
@@ -30,14 +24,14 @@
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="match_parent"
+        android:inputType="textPassword"
+        android:layout_width="250dp"
+        android:layout_gravity="center_horizontal"
         android:layout_height="40dp"
-        android:layout_marginLeft="30dp"
         android:paddingLeft="20dp"
         android:background="#444444"
         android:alpha="0.7"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginTop="30dp"
         android:hint="mot de passe"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
@@ -53,24 +47,26 @@
         android:paddingLeft="40dp"
         android:paddingRight="50dp"
         android:alpha="1"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        style="@style/AppTheme"
+        android:elegantTextHeight="true" />
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/qr"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="70dp"/>
 
     <Button
         android:id="@+id/connexionQR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connexion avec un QR code"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:textColor="#FFFFFF"
         android:alpha="1"
-        android:layout_gravity="center_horizontal"/>-->
+        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>
