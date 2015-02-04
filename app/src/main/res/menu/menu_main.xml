@@ -4,9 +4,8 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/profil"
-        android:title="Profil"
-        android:icon="@drawable/profile"
+        android:id="@+id/panier"
+        android:title="panier"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
 
@@ -19,7 +18,7 @@
 
     <item
         android:id="@+id/About"
-        android:title="contact"
+        android:title="about"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
 

@@ -35,8 +35,8 @@ public class MainActivity extends Activity {
             case R.id.About:
                 Toast.makeText(getApplicationContext(),"Contact", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.profil:
-                Toast.makeText(getApplicationContext(),"Profil", Toast.LENGTH_SHORT).show();
+            case R.id.panier:
+                Toast.makeText(getApplicationContext(),"Votre panier", Toast.LENGTH_SHORT).show();
             default:
                 return super.onOptionsItemSelected(item);
         }
