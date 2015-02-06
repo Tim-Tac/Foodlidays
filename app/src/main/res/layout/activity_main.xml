@@ -20,6 +20,7 @@
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
         android:textColorHighlight="#FF0000"
+        android:singleLine="true"
         />
 
     <EditText
@@ -35,37 +36,42 @@
         android:hint="mot de passe"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
+        android:singleLine="true"
         />
 
     <Button
         android:id="@+id/connexion"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="Connexion"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:textColor="#FFFFFF"
-        android:paddingLeft="40dp"
-        android:paddingRight="50dp"
-        android:alpha="1"
+        android:background="#777777"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:alpha="0.8"
         android:layout_gravity="center_horizontal"
         style="@style/AppTheme"
         android:elegantTextHeight="true" />
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/qr"
-        android:layout_marginTop="70dp"/>
+        android:layout_marginTop="90dp"/>
 
     <Button
         android:id="@+id/connexionQR"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="Connexion avec un QR code"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:layout_marginTop="30dp"
+        android:background="#777777"
         android:textColor="#FFFFFF"
-        android:alpha="1"
+        android:alpha="0.8"
         android:layout_gravity="center_horizontal" />
 
 
