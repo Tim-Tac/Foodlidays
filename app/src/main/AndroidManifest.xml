@@ -19,7 +19,15 @@
         </activity>
         <activity
             android:name=".FoodCard"
-            android:label="@string/title_activity_food_card" >
+            android:label="Menus" >
+        </activity>
+        <activity
+            android:name=".Settings"
+            android:label="Paramètres" >
+        </activity>
+        <activity
+            android:name=".Card"
+            android:label="Panier" >
         </activity>
     </application>
 

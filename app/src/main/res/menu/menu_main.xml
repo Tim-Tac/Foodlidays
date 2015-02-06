@@ -4,11 +4,18 @@
     tools:context=".MainActivity">
 
     <item
+        android:id="@+id/pizza"
+        android:title="pizza"
+        android:orderInCategory="100"
+        android:icon="@drawable/pizza"
+        android:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/panier"
         android:title="panier"
         android:orderInCategory="100"
         android:icon="@drawable/panier"
-        android:showAsAction="ifRoom|withText" />
+        android:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/settings"

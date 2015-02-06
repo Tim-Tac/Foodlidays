@@ -41,10 +41,19 @@ public class MainActivity extends Activity {
                 semail = email.getText().toString();
                 snumber = number.getText().toString();
 
-                Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                intent.putExtra("email",semail);
-                intent.putExtra("number",snumber);
-                startActivity(intent);
+                if((!semail.matches("")) && !snumber.matches(""))
+                {
+                    Intent intent = new Intent(MainActivity.this, FoodCard.class);
+                    intent.putExtra("email",semail);
+                    intent.putExtra("number",snumber);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Vous devez remplir les 2 champs",Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
@@ -112,16 +121,26 @@ public class MainActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         semail = input.getText().toString();
 
-                        Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                        intent.putExtra("email",semail);
-                        intent.putExtra("number",snumber);
-                        startActivity(intent);
+                        if((!semail.matches("")) && !snumber.matches(""))
+                        {
+                            Intent intent = new Intent(MainActivity.this, FoodCard.class);
+                            intent.putExtra("email",semail);
+                            intent.putExtra("number",snumber);
+                            startActivity(intent);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(),"Vous devez remplir l'adresse email",Toast.LENGTH_SHORT).show();
+                        }
+
+
                     }
                 });
 
                 builder.setNegativeButton("Annuler",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                     }
                 });
 
