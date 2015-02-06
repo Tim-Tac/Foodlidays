@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
    <EditText
-        android:id="@+id/login"
+        android:id="@+id/number"
         android:layout_width="250dp"
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
@@ -24,8 +24,8 @@
         />
 
     <EditText
-        android:id="@+id/password"
-        android:inputType="textPassword"
+        android:id="@+id/email"
+        android:inputType="textEmailAddress"
         android:layout_width="250dp"
         android:layout_gravity="center_horizontal"
         android:layout_height="40dp"
@@ -33,7 +33,7 @@
         android:background="#444444"
         android:alpha="0.7"
         android:layout_marginTop="30dp"
-        android:hint="mot de passe"
+        android:hint="votre email"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
         android:singleLine="true"
@@ -43,7 +43,7 @@
         android:id="@+id/connexion"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="Connexion"
+        android:text="Connexion via identifiants"
         android:layout_marginTop="60dp"
         android:textColor="#FFFFFF"
         android:background="#777777"

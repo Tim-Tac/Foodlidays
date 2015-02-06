@@ -2,6 +2,9 @@
   <dictionary name="timothy">
     <words>
       <w>connexionqr</w>
+      <w>identifiant</w>
+      <w>semail</w>
+      <w>snumber</w>
     </words>
   </dictionary>
 </component>

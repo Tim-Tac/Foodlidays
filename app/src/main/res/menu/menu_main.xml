@@ -7,18 +7,13 @@
         android:id="@+id/panier"
         android:title="panier"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
+        android:icon="@drawable/panier"
+        android:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/settings"
         android:title="seetings"
         android:icon="@drawable/setings"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/About"
-        android:title="about"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
 
