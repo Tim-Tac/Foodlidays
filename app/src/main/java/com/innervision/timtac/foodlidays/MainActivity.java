@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 
 public class MainActivity extends Activity {
     private EditText number;
@@ -61,15 +64,11 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                try {
-                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                    intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // "PRODUCT_MODE for bar codes
-                    startActivityForResult(intent, 0);
-                } catch (Exception e) {
-                    Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
-                    Intent marketIntent = new Intent(Intent.ACTION_VIEW,marketUri);
-                    startActivity(marketIntent);
-                }
+                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                integrator.setResultDisplayDuration(0);
+                integrator.setCameraId(0);
+                integrator.setPrompt(" ");
+                integrator.initiateScan();
             }
         });
     }
@@ -100,10 +99,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-            if (resultCode == RESULT_OK) {
-                snumber = data.getStringExtra("SCAN_RESULT");
+            if (result != null) {
+                snumber = result.getContents();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Entrez votre email");
@@ -152,5 +151,5 @@ public class MainActivity extends Activity {
                 //handle cancel
             }
         }
-    }
+
 }
