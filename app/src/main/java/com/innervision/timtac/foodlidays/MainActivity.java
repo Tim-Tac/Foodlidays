@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class MainActivity extends Activity {
     private EditText number;
@@ -46,10 +49,14 @@ public class MainActivity extends Activity {
 
                 if((!semail.matches("")) && !snumber.matches(""))
                 {
-                    Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                    intent.putExtra("email",semail);
-                    intent.putExtra("number",snumber);
-                    startActivity(intent);
+                    if(isEmailValid(semail))
+                    {
+                        Intent intent = new Intent(MainActivity.this, FoodCard.class);
+                        intent.putExtra("email", semail);
+                        intent.putExtra("number", snumber);
+                        startActivity(intent);
+                    }
+                    else Toast.makeText(getApplicationContext(),"Email invalide",Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -151,5 +158,30 @@ public class MainActivity extends Activity {
                 //handle cancel
             }
         }
+
+
+    public boolean isEmailValid(String email)
+    {
+        String regExpn =
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+        CharSequence inputStr = email;
+
+        Pattern pattern;
+        pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
+        Matcher matcher;
+        matcher = pattern.matcher(inputStr);
+
+        return matcher.matches();
+    }
+
+
+
+
 
 }
