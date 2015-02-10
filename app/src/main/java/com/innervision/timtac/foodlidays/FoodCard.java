@@ -14,8 +14,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener {
-    private String email;
-    private String number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +23,6 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
         Spinner spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
-
-        Intent intent = getIntent();
-        email = intent.getStringExtra("email");
-        number = intent.getStringExtra("number");
 
         ArrayList<String> types = new ArrayList<>();
         types.add("entrées");
