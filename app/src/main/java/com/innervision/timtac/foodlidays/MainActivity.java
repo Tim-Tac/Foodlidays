@@ -38,9 +38,11 @@ public class MainActivity extends Activity {
     private EditText email;
     private String semail;
     private String snumber;
+
     // résultats pour les scripts serveur
     private String result;
     private String result2;
+
     // toutes les variables de session
     private static String session_type;
     private static String session_email;
@@ -83,9 +85,10 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
 
-                        if(result.matches("Wrong room number"))
+
+                        if(result.matches("wrong_number_room"))
                         {
-                            Toast.makeText(getApplicationContext(),"Numéro de chambre invalide",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),R.string.bad_room_nuber,Toast.LENGTH_LONG).show();
                         }
                         else {
 
@@ -102,31 +105,32 @@ public class MainActivity extends Activity {
                                 session_room = object2.getString("room");
                                 session_user_id= object2.getString("user_id");
 
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 Log.e("log_tag", "error in parsing " + e.toString());
                             }
 
-                            Toast.makeText(getApplicationContext(),
+                            Toast.makeText(getApplicationContext(),R.string.signed_in,Toast.LENGTH_SHORT).show();
+
+                            /*Toast.makeText(getApplicationContext(),
                                     "type : " + session_type + "\n " +
                                             "email : " + session_email + "\n " +
                                             "id : " + session_id + "\n " +
                                             "floor : " + session_floor + "\n " +
                                             "room : " + session_room + "\n " +
                                             "room_number : " + session_room_number + "\n " +
-                                            "users is : " + session_user_id, Toast.LENGTH_LONG).show();
+                                            "users is : " + session_user_id, Toast.LENGTH_LONG).show();*/
 
 
                             Intent intent = new Intent(MainActivity.this, FoodCard.class);
                             startActivity(intent);
                         }
                     }
-                    else Toast.makeText(getApplicationContext(),"Email invalide",Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(getApplicationContext(),R.string.email_invalid,Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Vous devez remplir les 2 champs",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),R.string.need_two_field,Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -150,44 +154,44 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-            if (result != null) {
+            if (result != null)
+            {
                 snumber = result.getContents();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Entrez votre email");
+                builder.setTitle("Email");
 
                 final EditText input = new EditText(MainActivity.this);
-                input.setHint("votre email");
+                input.setHint(R.string.request_email);
                 input.setPadding(25, 25, 25, 25);
                 input.setTextSize(20);
                 input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 builder.setView(input);
 
 
-                builder.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         semail = input.getText().toString();
 
-                        if((!semail.matches("")) && !snumber.matches(""))
+                        if((!semail.matches("")) && isEmailValid(semail))
                         {
                             Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                            intent.putExtra("email",semail);
-                            intent.putExtra("number",snumber);
                             startActivity(intent);
                         }
                         else
                         {
-                            Toast.makeText(getApplicationContext(),"Vous devez remplir l'adresse email",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),R.string.email_valid_required,Toast.LENGTH_SHORT).show();
                         }
 
 
                     }
                 });
 
-                builder.setNegativeButton("Annuler",new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.cancel_action,new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -198,21 +202,19 @@ public class MainActivity extends Activity {
                 dialog.show();
 
             }
-            if(resultCode == RESULT_CANCELED){
-                //handle cancel
+            else
+            {
+                Toast.makeText(getApplicationContext(),R.string.qr_code_failed,Toast.LENGTH_SHORT).show();
             }
         }
 
 
     private boolean isEmailValid(String email)
     {
-        String regExpn =
-                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
-                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
-                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
-                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+        String regExpn = "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@((([0-1]?" +
+                "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])" +
+                "\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4]" +
+                "[0-9])){1}|([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
 
         CharSequence inputStr = email;
 
@@ -239,7 +241,7 @@ public class MainActivity extends Activity {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost request = new HttpPost(params[0]);
 
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+                List<NameValuePair> nameValuePairs = new ArrayList<>(3);
                 nameValuePairs.add(new BasicNameValuePair("room_number", params[1]));
                 nameValuePairs.add(new BasicNameValuePair("email", params[2]));
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs));

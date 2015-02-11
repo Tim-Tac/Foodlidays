@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Foodlidays</string>
+    <string name="connexion">Sign in with IDs</string>
+    <string name="connexion_qr">Sign in with QR code</string>
+    <string name="request_email">Enter your email</string>
+    <string name="request_room">Enter your room\'s ID</string>
+    <string name="qr_code">QR Code</string>
+    <string name="need_two_field">You must fill both fields</string>
+    <string name="email_invalid">Invalid email</string>
+    <string name="bad_room_nuber">Wrong room number</string>
+    <string name="signed_in">Connected</string>
+    <string name="qr_code_failed">Error while reading QR code</string>
+    <string name="cancel_action">Cancel</string>
+    <string name="ok_action">Validate</string>
+    <string name="email_valid_required">A valid email is required</string>
+</resources>
