@@ -1,19 +1,32 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="15dp"
     tools:context="com.innervision.timtac.foodlidays.Settings">
 
     <TextView
+        android:id="@+id/indentifiant"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="indentifié comme : "/>
 
-    <TextView
+
+    <Button
+        android:id="@+id/deco"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="votre email : "/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:text="Déconnexion"
+        />
 
-</LinearLayout>
+
+
+</RelativeLayout>

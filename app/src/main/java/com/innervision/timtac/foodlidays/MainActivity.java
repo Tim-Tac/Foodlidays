@@ -8,9 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,10 +21,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -43,17 +38,17 @@ public class MainActivity extends Activity {
     private EditText email;
     private String semail;
     private String snumber;
-
+    // résultats pour les scripts serveur
     private String result;
     private String result2;
-
-    private String session_type;
-    private String session_email;
-    private String session_room;
-    private String session_id;
-    private String session_room_number;
-    private String session_floor;
-
+    // toutes les variables de session
+    private static String session_type;
+    private static String session_email;
+    private static String session_room;
+    private static String session_id;
+    private static String session_user_id;
+    private static String session_room_number;
+    private static String session_floor;
 
 
     @Override
@@ -105,6 +100,7 @@ public class MainActivity extends Activity {
                                 session_room_number = object2.getString("room_number");
                                 session_floor = object2.getString("floor");
                                 session_room = object2.getString("room");
+                                session_user_id= object2.getString("user_id");
 
 
                             } catch (JSONException e) {
@@ -118,13 +114,12 @@ public class MainActivity extends Activity {
                                             "id : " + session_id + "\n " +
                                             "floor : " + session_floor + "\n " +
                                             "room : " + session_room + "\n " +
-                                            "room_number : " + session_room_number + "\n ", Toast.LENGTH_LONG).show();
+                                            "room_number : " + session_room_number + "\n " +
+                                            "users is : " + session_user_id, Toast.LENGTH_LONG).show();
 
 
-                            /*Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                            intent.putExtra("email", semail);
-                            intent.putExtra("number", snumber);
-                            startActivity(intent);*/
+                            Intent intent = new Intent(MainActivity.this, FoodCard.class);
+                            startActivity(intent);
                         }
                     }
                     else Toast.makeText(getApplicationContext(),"Email invalide",Toast.LENGTH_SHORT).show();
@@ -151,29 +146,6 @@ public class MainActivity extends Activity {
         });
     }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.settings:
-                Toast.makeText(getApplicationContext(),"Paramètres", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.panier:
-                Toast.makeText(getApplicationContext(),"Votre panier", Toast.LENGTH_SHORT).show();
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -232,7 +204,7 @@ public class MainActivity extends Activity {
         }
 
 
-    public boolean isEmailValid(String email)
+    private boolean isEmailValid(String email)
     {
         String regExpn =
                 "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
@@ -252,7 +224,6 @@ public class MainActivity extends Activity {
         return matcher.matches();
     }
 
-    //************************Classe thread qui intéragit avec le serveur
     public class Script extends AsyncTask<String, Void, String> {
 
         @Override
@@ -290,4 +261,40 @@ public class MainActivity extends Activity {
         protected void onPostExecute(String ligne){
         }
     }
+
+    public static String getSession_type()
+    {
+        return session_type;
+    }
+
+    public static String getSession_email()
+    {
+        return session_email;
+    }
+
+    public static String getSession_room()
+    {
+        return session_room;
+    }
+
+    public static String getSession_id()
+    {
+        return session_id;
+    }
+
+    public static String getSession_user_id()
+    {
+        return session_user_id;
+    }
+
+    public static String getSession_room_number()
+    {
+        return session_room_number;
+    }
+
+    public static String getSession_floor()
+    {
+        return session_floor;
+    }
+
 }
