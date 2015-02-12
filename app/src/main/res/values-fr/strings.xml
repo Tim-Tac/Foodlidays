@@ -4,14 +4,14 @@
     <string name="connexion">Connexion via identifiants</string>
     <string name="connexion_qr">Connexion via QR code</string>
     <string name="request_email">Entrez votre email</string>
-    <string name="request_room">Entrez votre identifiant de chambre</string>
+    <string name="request_room">Entrez votre ID de chambre</string>
     <string name="qr_code">QR Code</string>
-    <string name="need_two_field">Vous devez remplir les2 champs</string>
+    <string name="need_two_field">Vous devez remplir les 2 champs</string>
     <string name="email_invalid">L\'email est invalide</string>
     <string name="bad_room_nuber">Identifiant de chambre invalide</string>
     <string name="signed_in">Connecté</string>
     <string name="qr_code_failed">Erreur lors de la lecture du QR code</string>
     <string name="cancel_action">Annuler</string>
     <string name="ok_action">Valider</string>
-    <string name="email_valid_required">Un email valide requis est demandé</string>
+    <string name="email_valid_required">Un email valide est requis</string>
 </resources>

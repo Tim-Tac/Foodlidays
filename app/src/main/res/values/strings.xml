@@ -4,7 +4,7 @@
     <string name="connexion">Connexion via identifiants</string>
     <string name="connexion_qr">Connexion via QR code</string>
     <string name="request_email">Entrez votre email</string>
-    <string name="request_room">Entrez votre identifiant de chambre</string>
+    <string name="request_room">Entrez votre ID de chambre</string>
     <string name="qr_code">QR Code</string>
     <string name="need_two_field">Vous devez remplir les 2 champs</string>
     <string name="email_invalid">L\'email est invalide</string>

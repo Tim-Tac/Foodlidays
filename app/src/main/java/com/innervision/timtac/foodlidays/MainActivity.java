@@ -2,12 +2,14 @@ package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,7 +79,7 @@ public class MainActivity extends Activity {
                 {
                     if(isEmailValid(semail))
                     {
-                        String url = "http://192.168.1.44:8000/api/v1/login";
+                        String url = "http://192.168.1.53:8000/api/v1/login";
                         try {
                             new Script().execute(url,snumber,semail).get();
                         } catch (InterruptedException e) {
@@ -162,45 +164,43 @@ public class MainActivity extends Activity {
             {
                 snumber = result.getContents();
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Email");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-                final EditText input = new EditText(MainActivity.this);
-                input.setHint(R.string.request_email);
-                input.setPadding(25, 25, 25, 25);
-                input.setTextSize(20);
-                input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                builder.setView(input);
+                    builder.setTitle("Email");
+                    final EditText input = new EditText(MainActivity.this);
+                    input.setHint(R.string.request_email);
+                    input.setPadding(25, 25, 25, 25);
+                    input.setTextSize(20);
+                    input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    builder.setView(input);
 
 
-                builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        semail = input.getText().toString();
+                    builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            semail = input.getText().toString();
 
-                        if((!semail.matches("")) && isEmailValid(semail))
-                        {
-                            Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                            startActivity(intent);
+                            if ((!semail.matches("")) && isEmailValid(semail)) {
+                                Intent intent = new Intent(MainActivity.this, FoodCard.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.email_valid_required, Toast.LENGTH_SHORT).show();
+                            }
+
+
                         }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(),R.string.email_valid_required,Toast.LENGTH_SHORT).show();
+                    });
+
+                    builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
                         }
+                    });
 
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                    }
-                });
-
-                builder.setNegativeButton(R.string.cancel_action,new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
 
             }
             else
