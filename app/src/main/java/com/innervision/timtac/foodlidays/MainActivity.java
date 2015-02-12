@@ -60,7 +60,6 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //test
 
         number = (EditText)findViewById(R.id.number);
         email = (EditText)findViewById(R.id.email);
@@ -79,7 +78,9 @@ public class MainActivity extends Activity {
                 {
                     if(isEmailValid(semail))
                     {
-                        String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/login";
+                        //String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/login";
+                        //String url = "http://192.168.1.53:8000/api/v1/login";
+                        String url = "http://192.168.1.53:8000/api/v1/food/cat/all/1050";
                         try {
                             new Script().execute(url,snumber,semail).get();
                         } catch (InterruptedException e) {
@@ -87,6 +88,8 @@ public class MainActivity extends Activity {
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
+
+                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
 
                         if(result.length() < 30)                       {
                             Toast.makeText(getApplicationContext(),R.string.bad_room_nuber,Toast.LENGTH_LONG).show();
