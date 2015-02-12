@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
                 {
                     if(isEmailValid(semail))
                     {
-                        String url = "http://192.168.1.53:8000/api/v1/login";
+                        String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/login";
                         try {
                             new Script().execute(url,snumber,semail).get();
                         } catch (InterruptedException e) {
@@ -88,13 +88,11 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
 
-
-                        if(result.matches("wrong_number_room"))
-                        {
+                        if(result.length() < 30)                       {
                             Toast.makeText(getApplicationContext(),R.string.bad_room_nuber,Toast.LENGTH_LONG).show();
                         }
-                        else {
-
+                        else
+                        {
                             try {
 
                                 JSONObject object = new JSONObject(result);

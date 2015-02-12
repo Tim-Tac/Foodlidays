@@ -62,7 +62,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
         String item = parent.getItemAtPosition(pos).toString();
-        Toast.makeText(getApplicationContext(),"sélectionné : " + item,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"sélectionné : " + item,Toast.LENGTH_SHORT).show();
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
