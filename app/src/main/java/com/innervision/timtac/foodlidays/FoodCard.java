@@ -2,9 +2,7 @@ package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,23 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener {
 
     private String result;
-    private String zipcode = "1050";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,25 +33,22 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         types.add("desserts");
         types.add("formages");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,types);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,types);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-
-
-
         //String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/1050";
-        String url = "http://192.168.1.53:8000/api/v1/food/cat/all/1050";
+        String url = "http://192.168.1.13:8000/api/v1/food/cat/all/1050";
+
         try {
-            new Script().execute(url).get();
+            result = new GetRequest().execute(url).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        Toast.makeText(getApplicationContext(),zipcode+ " "+ result,Toast.LENGTH_LONG).show();
 
-
+        Toast.makeText(getApplicationContext(),"ici : "+ result,Toast.LENGTH_SHORT).show();
 
     }
 
@@ -102,40 +86,4 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         // Another interface callback
     }
 
-    public class Script extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            try{
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost request = new HttpPost(params[0]);
-
-                List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-                nameValuePairs.add(new BasicNameValuePair("zipcode", params[1]));
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                HttpResponse response = httpclient.execute(request);
-
-                BufferedReader in = new BufferedReader
-                        (new InputStreamReader(response.getEntity().getContent()));
-                result = in.readLine();
-                in.close();
-
-            }catch(Exception e){
-                Log.e("log_tag", "Error in http connection " + e.toString());
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String ligne){
-        }
-    }
 }

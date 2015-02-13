@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Foodlidays</string>
-    <string name="connexion">Connexion via identifiants</string>
-    <string name="connexion_qr">Connexion via QR code</string>
     <string name="request_email">Entrez votre email</string>
     <string name="request_room">Entrez votre ID de chambre</string>
     <string name="qr_code">QR Code</string>
@@ -14,4 +12,6 @@
     <string name="cancel_action">Annuler</string>
     <string name="ok_action">Valider</string>
     <string name="email_valid_required">Un email valide est requis</string>
+    <string name="or_use_qr">Ou utilisez le scanneur \nde QR code pour le remplir</string>
+    <string name="sign">Connexion</string>
 </resources>

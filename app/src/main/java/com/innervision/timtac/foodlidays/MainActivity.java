@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -53,6 +54,10 @@ public class MainActivity extends Activity {
     private static String session_user_id;
     private static String session_room_number;
     private static String session_floor;
+    private static String session_street_address;
+    private static String session_city;
+    private static String session_zip;
+    private static String session_country;
 
 
     @Override
@@ -64,8 +69,7 @@ public class MainActivity extends Activity {
         number = (EditText)findViewById(R.id.number);
         email = (EditText)findViewById(R.id.email);
         Button connexion= (Button)findViewById(R.id.connexion);
-        Button connexionqr = (Button)findViewById(R.id.connexionQR);
-
+        ImageView imageqr = (ImageView)findViewById(R.id.imageqr);
 
         connexion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,9 +82,7 @@ public class MainActivity extends Activity {
                 {
                     if(isEmailValid(semail))
                     {
-                        //String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/login";
-                        //String url = "http://192.168.1.53:8000/api/v1/login";
-                        String url = "http://192.168.1.53:8000/api/v1/food/cat/all/1050";
+                        String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/login";
                         try {
                             new Script().execute(url,snumber,semail).get();
                         } catch (InterruptedException e) {
@@ -89,7 +91,7 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
 
-                        Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
 
                         if(result.length() < 30)                       {
                             Toast.makeText(getApplicationContext(),R.string.bad_room_nuber,Toast.LENGTH_LONG).show();
@@ -108,6 +110,10 @@ public class MainActivity extends Activity {
                                 session_floor = object2.getString("floor");
                                 session_room = object2.getString("room");
                                 session_user_id= object2.getString("user_id");
+                                session_street_address= object2.getString("street_address");
+                                session_city= object2.getString("zip");
+                                session_country= object2.getString("city");
+                                session_zip= object2.getString("country");
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -116,32 +122,18 @@ public class MainActivity extends Activity {
 
                             Toast.makeText(getApplicationContext(),R.string.signed_in,Toast.LENGTH_SHORT).show();
 
-                            /*Toast.makeText(getApplicationContext(),
-                                    "type : " + session_type + "\n " +
-                                            "email : " + session_email + "\n " +
-                                            "id : " + session_id + "\n " +
-                                            "floor : " + session_floor + "\n " +
-                                            "room : " + session_room + "\n " +
-                                            "room_number : " + session_room_number + "\n " +
-                                            "users is : " + session_user_id, Toast.LENGTH_LONG).show();*/
-
-
                             Intent intent = new Intent(MainActivity.this, FoodCard.class);
                             startActivity(intent);
                         }
                     }
                     else Toast.makeText(getApplicationContext(),R.string.email_invalid,Toast.LENGTH_SHORT).show();
                 }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),R.string.need_two_field,Toast.LENGTH_SHORT).show();
-                }
-
-
+                else Toast.makeText(getApplicationContext(),R.string.need_two_field,Toast.LENGTH_SHORT).show();
             }
         });
 
-        connexionqr.setOnClickListener(new View.OnClickListener() {
+        imageqr.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
 
@@ -154,62 +146,22 @@ public class MainActivity extends Activity {
         });
     }
 
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
             if (result != null)
             {
-                snumber = result.getContents();
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-                    builder.setTitle("Email");
-                    final EditText input = new EditText(MainActivity.this);
-                    input.setHint(R.string.request_email);
-                    input.setPadding(25, 25, 25, 25);
-                    input.setTextSize(20);
-                    input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                    builder.setView(input);
-
-
-                    builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            semail = input.getText().toString();
-
-                            if ((!semail.matches("")) && isEmailValid(semail)) {
-                                Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(getApplicationContext(), R.string.email_valid_required, Toast.LENGTH_SHORT).show();
-                            }
-
-
-                        }
-                    });
-
-                    builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-
+                number.setText(result.getContents());
             }
             else
             {
                 Toast.makeText(getApplicationContext(),R.string.qr_code_failed,Toast.LENGTH_SHORT).show();
             }
         }
-
 
     private boolean isEmailValid(String email)
     {
@@ -228,7 +180,8 @@ public class MainActivity extends Activity {
         return matcher.matches();
     }
 
-    public class Script extends AsyncTask<String, Void, String> {
+    public class Script extends AsyncTask<String, Void, String>
+    {
 
         @Override
         protected void onPreExecute() {
@@ -264,6 +217,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(String ligne){
         }
+
     }
 
     public static String getSession_type()
@@ -299,6 +253,22 @@ public class MainActivity extends Activity {
     public static String getSession_floor()
     {
         return session_floor;
+    }
+
+    public static String getSession_street_address() {
+        return session_street_address;
+    }
+
+    public static String getSession_city() {
+        return session_city;
+    }
+
+    public static String getSession_zip() {
+        return session_zip;
+    }
+
+    public static String getSession_country() {
+        return session_country;
     }
 
 }
