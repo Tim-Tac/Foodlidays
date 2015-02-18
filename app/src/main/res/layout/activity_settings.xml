@@ -16,7 +16,7 @@
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="indentifiant de chambre : "/>
+            android:text="identifiant de chambre : "/>
 
         <TextView
             android:id="@+id/indentifiant"

@@ -1,7 +1,6 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -84,61 +83,64 @@ public class MainActivity extends Activity {
                         String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/login";
                         try {
                             new Script().execute(url,snumber,semail).get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
+                        } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
                         }
 
                         //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
 
-                        if(result.length() < 30)                       {
-                            Toast.makeText(getApplicationContext(),R.string.bad_room_nuber,Toast.LENGTH_LONG).show();
-                        }
-                        else
+                        if(result != null)
                         {
-                            try {
-
-                                JSONObject object = new JSONObject(result);
-                                session_email = object.getString("email");
-                                session_type = object.getString("place_type");
-                                result2 = object.getString("room");
-                                JSONObject object2 = new JSONObject(result2);
-                                session_id = object2.getString("id");
-                                session_room_number = object2.getString("room_number");
-                                session_floor = object2.getString("floor");
-                                session_room = object2.getString("room");
-                                session_user_id= object2.getString("user_id");
-                                session_street_address= object2.getString("street_address");
-                                session_city= object2.getString("zip");
-                                session_country= object2.getString("city");
-                                session_zip= object2.getString("country");
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Log.e("log_tag", "error in parsing " + e.toString());
+                            if (result.length() < 30)
+                            {
+                                Toast.makeText(getApplicationContext(), R.string.bad_room_nuber, Toast.LENGTH_LONG).show();
                             }
+                            else
+                            {
+                                try {
 
-                            Toast.makeText(getApplicationContext(),R.string.signed_in,Toast.LENGTH_SHORT).show();
+                                    JSONObject object = new JSONObject(result);
+                                    session_email = object.getString("email");
+                                    session_type = object.getString("place_type");
+                                    result2 = object.getString("room");
+                                    JSONObject object2 = new JSONObject(result2);
+                                    session_id = object2.getString("id");
+                                    session_room_number = object2.getString("room_number");
+                                    session_floor = object2.getString("floor");
+                                    session_room = object2.getString("room");
+                                    session_user_id = object2.getString("user_id");
+                                    session_street_address = object2.getString("street_address");
+                                    session_city = object2.getString("city");
+                                    session_country = object2.getString("country");
+                                    session_zip = object2.getString("zip");
 
-                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Log.e("log_tag", "error in parsing " + e.toString());
+                                }
 
-                            prefs.edit().putString("session_email",session_email).apply();
-                            prefs.edit().putString("session_type",session_type).apply();
-                            prefs.edit().putString("session_id",session_id).apply();
-                            prefs.edit().putString("session_room_number",session_room_number).apply();
-                            prefs.edit().putString("session_floor",session_floor).apply();
-                            prefs.edit().putString("session_room",session_room).apply();
-                            prefs.edit().putString("session_user_id",session_user_id).apply();
-                            prefs.edit().putString("session_street_address",session_street_address).apply();
-                            prefs.edit().putString("session_city",session_city).apply();
-                            prefs.edit().putString("session_country",session_country).apply();
-                            prefs.edit().putString("session_zip",session_zip).apply();
+                                Toast.makeText(getApplicationContext(), R.string.signed_in, Toast.LENGTH_SHORT).show();
+
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+                                prefs.edit().putString("session_email", session_email).apply();
+                                prefs.edit().putString("session_type", session_type).apply();
+                                prefs.edit().putString("session_id", session_id).apply();
+                                prefs.edit().putString("session_room_number", session_room_number).apply();
+                                prefs.edit().putString("session_floor", session_floor).apply();
+                                prefs.edit().putString("session_room", session_room).apply();
+                                prefs.edit().putString("session_user_id", session_user_id).apply();
+                                prefs.edit().putString("session_street_address", session_street_address).apply();
+                                prefs.edit().putString("session_city", session_city).apply();
+                                prefs.edit().putString("session_country", session_country).apply();
+                                prefs.edit().putString("session_zip", session_zip).apply();
 
 
-                            Intent intent = new Intent(MainActivity.this, FoodCard.class);
-                            startActivity(intent);
+                                Intent intent = new Intent(MainActivity.this, FoodCard.class);
+                                startActivity(intent);
+                            }
                         }
+                        else Toast.makeText(getApplicationContext(),"Pas de connexion internet",Toast.LENGTH_SHORT).show();
                     }
                     else Toast.makeText(getApplicationContext(),R.string.email_invalid,Toast.LENGTH_SHORT).show();
                 }
@@ -184,12 +186,10 @@ public class MainActivity extends Activity {
                 "\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4]" +
                 "[0-9])){1}|([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
 
-        CharSequence inputStr = email;
-
         Pattern pattern;
         pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
         Matcher matcher;
-        matcher = pattern.matcher(inputStr);
+        matcher = pattern.matcher(email);
 
         return matcher.matches();
     }

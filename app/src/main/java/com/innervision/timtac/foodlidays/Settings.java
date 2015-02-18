@@ -21,15 +21,27 @@ public class Settings extends Activity {
         setContentView(R.layout.activity_settings);
 
         TextView identifiant = (TextView)findViewById(R.id.indentifiant);
+        TextView email = (TextView)findViewById(R.id.email);
+        TextView adresse = (TextView)findViewById(R.id.adresse);
+        TextView zip = (TextView)findViewById(R.id.zip);
+        TextView ville = (TextView)findViewById(R.id.ville);
+        TextView etage = (TextView)findViewById(R.id.etage);
+        TextView numero = (TextView)findViewById(R.id.numero);
         Button deco = (Button)findViewById(R.id.deco);
 
-        identifiant.setText("identifiant de chambre : " + MainActivity.session_room_number);
+        identifiant.setText(MainActivity.session_room_number);
+        email.setText(MainActivity.session_email);
+        adresse.setText(MainActivity.session_street_address);
+        zip.setText(MainActivity.session_zip + " ");
+        ville.setText(MainActivity.session_city);
+        etage.setText(MainActivity.session_floor+"e étage, chambre ");
+        numero.setText(MainActivity.session_room);
 
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Settings.this);
-                prefs.edit().clear().commit();
+                prefs.edit().clear().apply();
                 Intent intent= new Intent(Settings.this, MainActivity.class);
                 startActivity(intent);
             }

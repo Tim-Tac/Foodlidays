@@ -40,13 +40,13 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         //String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/1050";
         String url = "http://192.168.1.13:8000/api/v1/food/cat/all/1050";
 
-        try {
+        /*try {
             result = new GetRequest().execute(url).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        Toast.makeText(getApplicationContext(),"ici : "+ result,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"ici : "+ result,Toast.LENGTH_SHORT).show();
 
     }
 
