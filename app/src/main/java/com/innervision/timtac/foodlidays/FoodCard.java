@@ -42,9 +42,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
         try {
             result = new GetRequest().execute(url).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 

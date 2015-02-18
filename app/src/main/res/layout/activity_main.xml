@@ -1,22 +1,29 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg_food"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:src="@drawable/truelogofull"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"/>
 
    <EditText
         android:id="@+id/number"
         android:layout_width="230dp"
         android:layout_height="45dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/edit_text_login"
+        android:gravity="center"
+        android:ellipsize="start"
         android:alpha="0.7"
-        android:layout_marginTop="50dp"
-       android:textSize="15sp"
+        android:layout_marginTop="90dp"
+        android:textSize="15sp"
         android:hint="@string/request_room"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
@@ -28,32 +35,32 @@
         android:layout_height="wrap_content"
         android:text="@string/or_use_qr"
         android:gravity="center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="150dp"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"/>
+        android:textSize="18sp"/>
 
     <ImageView
         android:id="@+id/imageqr"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:contentDescription="@string/qr_code"
-        android:layout_gravity="center_horizontal"
         android:src="@drawable/qr"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="200dp"
+        android:layout_centerHorizontal="true"/>
 
 
     <EditText
         android:id="@+id/email"
         android:inputType="textEmailAddress"
         android:layout_width="230dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:layout_height="45dp"
         android:background="@drawable/edit_text_login"
         android:ellipsize="start"
         android:gravity="center"
         android:alpha="0.7"
         android:textSize="15sp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="325dp"
         android:hint="@string/request_email"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
@@ -61,16 +68,18 @@
 
     <Button
         android:id="@+id/connexion"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:text="@string/sign"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
         android:layout_marginTop="100dp"
         android:background="#666666"
         android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:alpha="0.8"
-        android:layout_gravity="center_horizontal" />
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"/>
 
-</LinearLayout>
+</RelativeLayout>

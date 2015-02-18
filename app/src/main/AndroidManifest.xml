@@ -11,29 +11,40 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:name=".Start"
+            android:label="Foodlidays"
+            android:theme="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar">
+        </activity>
+
         <activity
             android:name=".FoodCard"
             android:label="Menus" >
+
         </activity>
+
         <activity
             android:name=".Settings"
             android:label="Paramètres" >
         </activity>
+
         <activity
             android:name=".Card"
             android:label="Panier" >
         </activity>
+
     </application>
 
 </manifest>

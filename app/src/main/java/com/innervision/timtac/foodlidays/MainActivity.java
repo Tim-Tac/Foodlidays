@@ -1,15 +1,13 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,17 +45,17 @@ public class MainActivity extends Activity {
     private String result2;
 
     // toutes les variables de session
-    private static String session_type;
-    private static String session_email;
-    private static String session_room;
-    private static String session_id;
-    private static String session_user_id;
-    private static String session_room_number;
-    private static String session_floor;
-    private static String session_street_address;
-    private static String session_city;
-    private static String session_zip;
-    private static String session_country;
+    public static String session_type;
+    public static String session_email;
+    public static String session_room;
+    public static String session_id;
+    public static String session_user_id;
+    public static String session_room_number;
+    public static String session_floor;
+    public static String session_street_address;
+    public static String session_city;
+    public static String session_zip;
+    public static String session_country;
 
 
     @Override
@@ -70,6 +68,7 @@ public class MainActivity extends Activity {
         email = (EditText)findViewById(R.id.email);
         Button connexion= (Button)findViewById(R.id.connexion);
         ImageView imageqr = (ImageView)findViewById(R.id.imageqr);
+
 
         connexion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +120,21 @@ public class MainActivity extends Activity {
                             }
 
                             Toast.makeText(getApplicationContext(),R.string.signed_in,Toast.LENGTH_SHORT).show();
+
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+                            prefs.edit().putString("session_email",session_email).apply();
+                            prefs.edit().putString("session_type",session_type).apply();
+                            prefs.edit().putString("session_id",session_id).apply();
+                            prefs.edit().putString("session_room_number",session_room_number).apply();
+                            prefs.edit().putString("session_floor",session_floor).apply();
+                            prefs.edit().putString("session_room",session_room).apply();
+                            prefs.edit().putString("session_user_id",session_user_id).apply();
+                            prefs.edit().putString("session_street_address",session_street_address).apply();
+                            prefs.edit().putString("session_city",session_city).apply();
+                            prefs.edit().putString("session_country",session_country).apply();
+                            prefs.edit().putString("session_zip",session_zip).apply();
+
 
                             Intent intent = new Intent(MainActivity.this, FoodCard.class);
                             startActivity(intent);
@@ -218,57 +232,6 @@ public class MainActivity extends Activity {
         protected void onPostExecute(String ligne){
         }
 
-    }
-
-    public static String getSession_type()
-    {
-        return session_type;
-    }
-
-    public static String getSession_email()
-    {
-        return session_email;
-    }
-
-    public static String getSession_room()
-    {
-        return session_room;
-    }
-
-    public static String getSession_id()
-    {
-        return session_id;
-    }
-
-    public static String getSession_user_id()
-    {
-        return session_user_id;
-    }
-
-    public static String getSession_room_number()
-    {
-        return session_room_number;
-    }
-
-    public static String getSession_floor()
-    {
-        return session_floor;
-    }
-
-    public static String getSession_street_address() {
-        return session_street_address;
-    }
-
-    public static String getSession_city() {
-        return session_city;
-    }
-
-    public static String getSession_zip() {
-        return session_zip;
-    }
-
-    public static String getSession_country() {
-        return session_country;
     }
 
 }

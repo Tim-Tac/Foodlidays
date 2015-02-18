@@ -2,7 +2,9 @@ package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,23 +15,21 @@ import android.widget.TextView;
 
 public class Settings extends Activity {
 
-    private TextView identifiant;
-    private Button deco;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        identifiant = (TextView)findViewById(R.id.indentifiant);
-        deco = (Button)findViewById(R.id.deco);
+        TextView identifiant = (TextView)findViewById(R.id.indentifiant);
+        Button deco = (Button)findViewById(R.id.deco);
 
-        identifiant.setText("identifiant de chambre : " + MainActivity.getSession_room_number());
-
+        identifiant.setText("identifiant de chambre : " + MainActivity.session_room_number);
 
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                prefs.edit().clear().commit();
                 Intent intent= new Intent(Settings.this, MainActivity.class);
                 startActivity(intent);
             }
