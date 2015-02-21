@@ -24,5 +24,7 @@
     <string name="display_email">Votre email :</string>
     <string name="dispaly_room_location">Localisation de la chambre :</string>
     <string name="nd_floor_room">e étage, chambre </string>
+    <string name="card">Panier</string>
+    <string name="menu">Menu</string>
 
 </resources>

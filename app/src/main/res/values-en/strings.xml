@@ -21,4 +21,6 @@
     <string name="display_email">Your email :</string>
     <string name="dispaly_room_location">Room\'s location :</string>
     <string name="nd_floor_room">e foor,  room</string>
+    <string name="card">Shopping cart</string>
+    <string name="menu">Menu</string>
 </resources>

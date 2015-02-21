@@ -32,18 +32,18 @@
 
         <activity
             android:name=".FoodCard"
-            android:label="Menus" >
+            android:label="@string/menu" >
 
         </activity>
 
         <activity
             android:name=".Settings"
-            android:label="Paramètres" >
+            android:label="@string/action_settings" >
         </activity>
 
         <activity
             android:name=".Card"
-            android:label="Panier" >
+            android:label="@string/card" >
         </activity>
 
     </application>
