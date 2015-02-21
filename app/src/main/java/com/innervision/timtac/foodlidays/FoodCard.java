@@ -9,13 +9,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener {
 
     private String result;
+    public ArrayList<String> cat = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,29 +31,49 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_card);
 
+        final ProgressBar myProgress = (ProgressBar)findViewById(R.id.progress);
+        ListView mylist = (ListView)findViewById(R.id.list);
+
         Spinner spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
 
-        ArrayList<String> types = new ArrayList<>();
-        types.add("entrées");
-        types.add("plats");
-        types.add("desserts");
-        types.add("formages");
+        String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/1050";
+        //String url = "http://192.168.1.13:8000/api/v1/food/cat/all/1050";
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,types);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        //String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/1050";
-        String url = "http://192.168.1.13:8000/api/v1/food/cat/all/1050";
-
-        /*try {
+        try {
             result = new GetRequest().execute(url).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        //Toast.makeText(getApplicationContext(),"ici : "+ result,Toast.LENGTH_SHORT).show();
+
+        if(result != null)
+        {
+            Toast.makeText(getApplicationContext(),"res : "+ result,Toast.LENGTH_SHORT).show();
+
+            try {
+
+                JSONObject json_object = new JSONObject(result);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            cat.add("entrées");
+            cat.add("plats");
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,cat);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+
+
+        }
+        else Toast.makeText(getApplicationContext(),"Pas d'accès à internet", Toast.LENGTH_LONG).show();
+
+
+        myProgress.setVisibility(View.GONE);
 
     }
 
@@ -80,7 +108,15 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
         String item = parent.getItemAtPosition(pos).toString();
+
         //Toast.makeText(getApplicationContext(),"sélectionné : " + item,Toast.LENGTH_SHORT).show();
+
+
+        //TODO mettre dans la listView tout les articles de cette catégorie et mettre un listener dessu
+
+
+
+
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
