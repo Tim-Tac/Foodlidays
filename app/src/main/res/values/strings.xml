@@ -15,8 +15,14 @@
     <string name="email_valid_required">Un email valide est requis</string>
     <string name="or_use_qr">Ou utilisez le scanneur \nde QR code pour le remplir</string>
     <string name="sign">Connexion</string>
-    <string name="title_activity_start">Start</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="title_activity_start" translatable="false">Start</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="empty_card">Votre panier est vide !</string>
+    <string name="sign_out">Déconnexion</string>
+    <string name="display_id_chambre">Identifiant de chambre :</string>
+    <string name="display_email">Votre email :</string>
+    <string name="dispaly_room_location">Localisation de la chambre :</string>
+    <string name="nd_floor_room">e étage, chambre </string>
 
 </resources>

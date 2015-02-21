@@ -6,6 +6,4 @@
     android:background="@drawable/bg_food"
     tools:context="com.innervision.timtac.foodlidays.Start">
 
-
-
 </RelativeLayout>

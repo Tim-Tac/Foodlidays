@@ -10,6 +10,8 @@ import android.view.MenuItem;
 
 public class Card extends Activity {
 
+    public static String panier;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

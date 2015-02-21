@@ -16,14 +16,15 @@
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="identifiant de chambre : "/>
+            android:text="@string/display_id_chambre"/>
 
         <TextView
             android:id="@+id/indentifiant"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xxxxxxxx"/>
+            android:layout_marginLeft="5dp"
+            android:text=""/>
 
         </LinearLayout>
 
@@ -36,14 +37,15 @@
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Votre email : "/>
+            android:text="@string/display_email"/>
 
         <TextView
             android:id="@+id/email"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="xx@xx.xx"/>
+            android:layout_marginLeft="5dp"
+            android:text=""/>
 
     </LinearLayout>
 
@@ -56,7 +58,7 @@
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Localisation de la chambre : "/>
+            android:text="@string/dispaly_room_location"/>
 
     </LinearLayout>
 
@@ -70,7 +72,7 @@
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="rue et numéro"/>
+            android:text=""/>
 
     </LinearLayout>
 
@@ -84,14 +86,15 @@
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="zipcode "/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/ville"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ville"/>
+            android:layout_marginLeft="5dp"
+            android:text=""/>
 
     </LinearLayout>
 
@@ -105,14 +108,15 @@
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="etage "/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/numero"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="numero"/>
+            android:layout_marginLeft="5dp"
+            android:text=""/>
 
     </LinearLayout>
 
@@ -126,7 +130,7 @@
         android:layout_centerHorizontal="true"
         android:paddingLeft="35dp"
         android:paddingRight="35dp"
-        android:text="Déconnexion"
+        android:text="@string/sign_out"
         />
 
 

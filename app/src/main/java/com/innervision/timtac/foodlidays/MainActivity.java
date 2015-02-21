@@ -87,8 +87,6 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
 
-                        //Toast.makeText(getApplicationContext(),result,Toast.LENGTH_LONG).show();
-
                         if(result != null)
                         {
                             if (result.length() < 30)

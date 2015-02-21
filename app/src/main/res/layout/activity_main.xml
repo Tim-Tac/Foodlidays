@@ -7,23 +7,23 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="50dp"
+        android:layout_width="250dp"
+        android:layout_height="55dp"
         android:src="@drawable/truelogofull"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"/>
 
    <EditText
         android:id="@+id/number"
-        android:layout_width="230dp"
-        android:layout_height="45dp"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/edit_text_login"
         android:gravity="center"
         android:ellipsize="start"
         android:alpha="0.7"
-        android:layout_marginTop="90dp"
-        android:textSize="15sp"
+        android:layout_marginTop="100dp"
+        android:textSize="17sp"
         android:hint="@string/request_room"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"
@@ -35,9 +35,9 @@
         android:layout_height="wrap_content"
         android:text="@string/or_use_qr"
         android:gravity="center_horizontal"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="170dp"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"/>
+        android:textSize="16sp"/>
 
     <ImageView
         android:id="@+id/imageqr"
@@ -45,22 +45,22 @@
         android:layout_height="110dp"
         android:contentDescription="@string/qr_code"
         android:src="@drawable/qr"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="215dp"
         android:layout_centerHorizontal="true"/>
 
 
     <EditText
         android:id="@+id/email"
         android:inputType="textEmailAddress"
-        android:layout_width="230dp"
+        android:layout_width="250dp"
         android:layout_centerHorizontal="true"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:background="@drawable/edit_text_login"
         android:ellipsize="start"
         android:gravity="center"
         android:alpha="0.7"
-        android:textSize="15sp"
-        android:layout_marginTop="325dp"
+        android:textSize="17sp"
+        android:layout_marginTop="355dp"
         android:hint="@string/request_email"
         android:textColorHint="#FFFFFF"
         android:textColor="#FFFFFF"

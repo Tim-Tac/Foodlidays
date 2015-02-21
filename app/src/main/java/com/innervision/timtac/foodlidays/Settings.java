@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class Settings extends Activity {
@@ -32,9 +33,9 @@ public class Settings extends Activity {
         identifiant.setText(MainActivity.session_room_number);
         email.setText(MainActivity.session_email);
         adresse.setText(MainActivity.session_street_address);
-        zip.setText(MainActivity.session_zip + " ");
+        zip.setText(MainActivity.session_zip);
         ville.setText(MainActivity.session_city);
-        etage.setText(MainActivity.session_floor+"e étage, chambre ");
+        etage.setText(MainActivity.session_floor + getString(R.string.nd_floor_room) );
         numero.setText(MainActivity.session_room);
 
         deco.setOnClickListener(new View.OnClickListener() {
@@ -60,8 +61,12 @@ public class Settings extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.panier:
-                Intent intent = new Intent(Settings.this, Card.class);
-                startActivity(intent);
+                if(Card.panier == null) Toast.makeText(getApplicationContext(), R.string.empty_card, Toast.LENGTH_SHORT).show();
+                else
+                {
+                    Intent intent2 = new Intent(Settings.this, Card.class);
+                    startActivity(intent2);
+                }
                 return true;
             case R.id.pizza:
                 Intent intent2 = new Intent(Settings.this, FoodCard.class);

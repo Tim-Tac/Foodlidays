@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener {
 
@@ -65,8 +64,12 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                 startActivity(intent);
                 return true;
             case R.id.panier:
-                Intent intent2 = new Intent(FoodCard.this, Card.class);
-                startActivity(intent2);
+                if(Card.panier == null) Toast.makeText(getApplicationContext(),R.string.empty_card,Toast.LENGTH_SHORT).show();
+                else
+                {
+                    Intent intent2 = new Intent(FoodCard.this, Card.class);
+                    startActivity(intent2);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
