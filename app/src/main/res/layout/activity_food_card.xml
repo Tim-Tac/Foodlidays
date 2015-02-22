@@ -21,7 +21,7 @@
 
         <Spinner
             android:layout_marginLeft="20dp"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
             android:layout_marginTop="10dp" />
@@ -30,26 +30,21 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="75dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="77dp"
         android:background="@drawable/edit_text_login"
         />
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="86dp"
-        android:layout_marginLeft="5dp">
-
         <ListView
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="83dp"
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
         </ListView>
 
-        </ScrollView>
 
     <ProgressBar
         android:id="@+id/progress"
