@@ -1,21 +1,31 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -24,10 +34,10 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     private Menu mMenu;
     private String result;
     public static String[] string_cat = {"Boissons","Burgers et sandwich","Desserts","Sushis et makis","Salades","Pizza","Végétarien","Pâtes","Asiatique","Déjeuner","Libanais","Appéritif"};
-    public ArrayList<String> cat = new ArrayList<>();
+    public static ArrayList<String> cat = new ArrayList<>();
     public static JSONArray jArray;
-    public static JSONObject jsonObject;
     public static ListView myList;
+    public static ArrayList<Articles> liste_articles = new ArrayList<>();
 
 
     @Override
@@ -41,7 +51,6 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
         Spinner spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
-        cat.add("Toutes");
 
 
         String zip_code_temp = "1435";
@@ -60,7 +69,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                 jArray = new JSONArray(result);
 
                 for(int i=0;i<jArray.length();i++) {
-                    jsonObject = jArray.getJSONObject(i);
+                    JSONObject jsonObject = jArray.getJSONObject(i);
 
                     if (!cat.contains(string_cat[jsonObject.getInt("category_id")-1]))
                         cat.add(string_cat[jsonObject.getInt("category_id")-1]);
@@ -128,50 +137,93 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
         String item = parent.getItemAtPosition(pos).toString();
 
-        Toast.makeText(getApplicationContext(),"sélectionné : " + item,Toast.LENGTH_SHORT).show();
+        int index = java.util.Arrays.asList(string_cat).indexOf(item);
+        index = index +1;
 
+        Toast.makeText(getApplicationContext(),item + " " + index,Toast.LENGTH_SHORT).show();
 
+        liste_articles.clear();
 
-        //TODO afficher les articles correspondants
+        for(int i=0;i<jArray.length();i++)
+        {
+            try {
 
+                JSONObject js = jArray.getJSONObject(i);
 
+                if(index == js.getInt("category_id"))
+                {
+                    Articles myArt = new Articles();
+                    myArt.name = js.getString("name");
+                    myArt.detail = js.getString("note");
+                    myArt.prix = js.getString("price");
 
+                    liste_articles.add(myArt);
+                }
 
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
-
-
-
-
-        ArrayAdapter<String> adapt = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,string_cat);
-        myList.setAdapter(adapt);
+        CustomArrayAdapter ad = new CustomArrayAdapter();
+        myList.setAdapter(ad);
 
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String article = parent.getItemAtPosition(position).toString();
 
-                Toast.makeText(getApplicationContext(),"choisi : " + article,Toast.LENGTH_SHORT).show();
+                Articles article = (Articles)myList.getItemAtPosition(position);
+
+                Toast.makeText(getApplicationContext(), "choisi : " + article.name, Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
 
+    public class CustomArrayAdapter extends BaseAdapter{
 
+        @Override
+        public int getCount() {
+            return liste_articles.size();
+        }
 
+        @Override
+        public Object getItem(int position) {
+            return liste_articles.get(position);
+        }
 
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
 
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
 
+            LayoutInflater inflater = (LayoutInflater)LayoutInflater.from(parent.getContext());
+            convertView = inflater.inflate(R.layout.detail_list,parent,false);
 
+            TextView name = (TextView)convertView.findViewById(R.id.titre);
+            TextView descr = (TextView)convertView.findViewById(R.id.description);
+            TextView prix = (TextView)convertView.findViewById(R.id.prix);
+            ImageView pic = (ImageView)convertView.findViewById(R.id.img);
 
+            Articles art = liste_articles.get(position);
 
+            Picasso.with(getApplicationContext()).load("http://i.imgur.com/DvpvklR.png").into(pic);
+            name.setText(art.name);
+            descr.setText(art.detail);
+            prix.setText(art.prix + "/pc");
 
+            return convertView;
 
+        }
+    }
 
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
-
 
 }
