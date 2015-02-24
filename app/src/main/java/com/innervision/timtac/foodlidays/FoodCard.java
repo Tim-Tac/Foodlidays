@@ -1,7 +1,6 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,24 +18,26 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener {
 
-    private Menu mMenu;
     private String result;
-    public static String[] string_cat = {"Boissons","Burgers et sandwich","Desserts","Sushis et makis","Salades","Pizza","Végétarien","Pâtes","Asiatique","Déjeuner","Libanais","Appéritif"};
-    public static ArrayList<String> cat = new ArrayList<>();
-    public static JSONArray jArray;
+    private String result_cat;
+
+    public static Spinner spinner;
     public static ListView myList;
+
+    public static JSONArray jArray_articles = new JSONArray();
+    public static JSONArray jArray_cat = new JSONArray();
+
+    public static ArrayList<String> all_cat = new ArrayList<>();
+    public static ArrayList<String> cat = new ArrayList<>();
     public static ArrayList<Articles> liste_articles = new ArrayList<>();
 
 
@@ -49,9 +50,46 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         final ProgressBar myProgress = (ProgressBar)findViewById(R.id.progress);
         myList = (ListView)findViewById(R.id.list);
 
-        Spinner spinner = (Spinner)findViewById(R.id.spinner);
+        spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
 
+
+
+
+
+        /*** Récupération des catégories ***/
+
+        String url_cat = "http://foodlidays.dev.innervisiongroup.com/api/v1/category";
+        try {
+            result_cat = new GetRequest().execute(url_cat).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+        if(result_cat != null)
+        {
+            try {
+
+                jArray_cat = new JSONArray(result_cat);
+
+                for(int i=0;i<jArray_cat.length();i++) {
+
+                    JSONObject jsonObject = jArray_cat.getJSONObject(i);
+                    all_cat.add(jsonObject.getString("name"));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else Toast.makeText(getApplicationContext(),"Pas de connexion internet", Toast.LENGTH_LONG).show();
+
+
+
+
+
+        /*** Création de la liste des catégories disponibles ***/
 
         String zip_code_temp = "1435";
         String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/"+zip_code_temp;
@@ -66,13 +104,13 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         {
             try {
 
-                jArray = new JSONArray(result);
+                jArray_articles = new JSONArray(result);
 
-                for(int i=0;i<jArray.length();i++) {
-                    JSONObject jsonObject = jArray.getJSONObject(i);
+                for(int i=0;i<jArray_articles.length();i++) {
+                    JSONObject jsonObject = jArray_articles.getJSONObject(i);
 
-                    if (!cat.contains(string_cat[jsonObject.getInt("category_id")-1]))
-                        cat.add(string_cat[jsonObject.getInt("category_id")-1]);
+                    if (!cat.contains(all_cat.get(jsonObject.getInt("category_id")-1)))
+                        cat.add(all_cat.get(jsonObject.getInt("category_id")-1));
                 }
 
             } catch (JSONException e) {
@@ -90,13 +128,21 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     }
 
 
+
+
+
+
+
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        mMenu = menu;
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
 
@@ -129,26 +175,24 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
 
 
-
-
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
         String item = parent.getItemAtPosition(pos).toString();
 
-        int index = java.util.Arrays.asList(string_cat).indexOf(item);
+        //int index = java.util.Arrays.asList(string_cat).indexOf(item);
+        int index = all_cat.indexOf(item);
         index = index +1;
 
         Toast.makeText(getApplicationContext(),item + " " + index,Toast.LENGTH_SHORT).show();
 
         liste_articles.clear();
 
-        for(int i=0;i<jArray.length();i++)
+        for(int i=0;i<jArray_articles.length();i++)
         {
             try {
 
-                JSONObject js = jArray.getJSONObject(i);
+                JSONObject js = jArray_articles.getJSONObject(i);
 
                 if(index == js.getInt("category_id"))
                 {
