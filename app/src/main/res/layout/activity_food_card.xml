@@ -45,13 +45,25 @@
 
         </ListView>
 
+    <TextView
+        android:id="@+id/any_restaurant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sorry, we didn't find any restaurant open right now in your area ..."
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
-    <ProgressBar
+
+    <!-- <ProgressBar
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"/> -->
 
 
 </RelativeLayout>

@@ -2,6 +2,8 @@ package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,13 +26,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener {
+public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener, AsyncResponse {
 
-    private String result;
-    private String result_cat;
+    public static String result = "";
+    public static String result_cat = "";
 
     public static Spinner spinner;
     public static ListView myList;
+    public static TextView any_restaurants;
 
     public static JSONArray jArray_articles = new JSONArray();
     public static JSONArray jArray_cat = new JSONArray();
@@ -47,87 +49,93 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_card);
 
-        final ProgressBar myProgress = (ProgressBar)findViewById(R.id.progress);
         myList = (ListView)findViewById(R.id.list);
+        any_restaurants = (TextView)findViewById(R.id.any_restaurant);
 
         spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
 
 
 
-
-
-        /*** Récupération des catégories ***/
-
-        String url_cat = "http://foodlidays.dev.innervisiongroup.com/api/v1/category";
-        try {
-            result_cat = new GetRequest().execute(url_cat).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-
-        if(result_cat != null)
+        if(isNetworkAvailable())
         {
+
+            /*************************** Récupération des catégories *******************************/
+
+            String url_cat = "http://foodlidays.dev.innervisiongroup.com/api/v1/category";
             try {
 
-                jArray_cat = new JSONArray(result_cat);
+                result_cat = new GetRequest().execute(url_cat).get();
 
-                for(int i=0;i<jArray_cat.length();i++) {
-
-                    JSONObject jsonObject = jArray_cat.getJSONObject(i);
-                    all_cat.add(jsonObject.getString("name"));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        else Toast.makeText(getApplicationContext(),"Pas de connexion internet", Toast.LENGTH_LONG).show();
+                //GetRequest get = new GetRequest();
+                //get.delegate = this;
 
 
-
-
-
-        /*** Création de la liste des catégories disponibles ***/
-
-        String zip_code_temp = "1435";
-        String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/"+zip_code_temp;
-
-        try {
-            result = new GetRequest().execute(url).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        if(result != null)
-        {
-            try {
-
-                jArray_articles = new JSONArray(result);
-
-                for(int i=0;i<jArray_articles.length();i++) {
-                    JSONObject jsonObject = jArray_articles.getJSONObject(i);
-
-                    if (!cat.contains(all_cat.get(jsonObject.getInt("category_id")-1)))
-                        cat.add(all_cat.get(jsonObject.getInt("category_id")-1));
-                }
-
-            } catch (JSONException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item,cat);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(adapter);
 
-        }
-        else Toast.makeText(getApplicationContext(),"Pas de connexion internet", Toast.LENGTH_LONG).show();
+            if (result_cat != null)
+            {
+                try {
 
-        myProgress.setVisibility(View.GONE);
+                    jArray_cat = new JSONArray(result_cat);
+
+                    for (int i = 0; i < jArray_cat.length(); i++) {
+
+                        JSONObject jsonObject = jArray_cat.getJSONObject(i);
+                        all_cat.add(jsonObject.getString("name"));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else Toast.makeText(getApplicationContext(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
+
+
+
+            /********************* Création de la liste des catégories disponibles *****************/
+
+            String zip_code_temp = "1435";
+            String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/" + zip_code_temp;
+
+            try {
+                result = new GetRequest().execute(url).get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            if (result != null)
+            {
+                if(result.length() < 70)
+                {
+
+                    try {
+
+                        jArray_articles = new JSONArray(result);
+
+                        for (int i = 0; i < jArray_articles.length(); i++) {
+                            JSONObject jsonObject = jArray_articles.getJSONObject(i);
+
+                            if (!cat.contains(all_cat.get(jsonObject.getInt("category_id"))))
+                                cat.add(all_cat.get(jsonObject.getInt("category_id")));
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, cat);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+
+                } any_restaurants.setVisibility(View.VISIBLE);
+
+            } else Toast.makeText(getApplicationContext(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
+
+        } else Toast.makeText(getApplicationContext(), "Pas de connexion internet valide", Toast.LENGTH_LONG).show();
     }
-
-
 
 
 
@@ -224,6 +232,11 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
     }
 
+    @Override
+    public void processFinish(String output) {
+        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_SHORT).show();
+    }
+
 
     public class CustomArrayAdapter extends BaseAdapter{
 
@@ -245,7 +258,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            LayoutInflater inflater = (LayoutInflater)LayoutInflater.from(parent.getContext());
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.detail_list,parent,false);
 
             TextView name = (TextView)convertView.findViewById(R.id.titre);
@@ -269,5 +282,15 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
+
+
+    private boolean isNetworkAvailable() {
+        getApplicationContext();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
 
 }

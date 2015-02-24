@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 
 public class GetRequest extends AsyncTask<String, String, String> {
     private String result;
+    public AsyncResponse delegate = null;
 
     @Override
     protected void onPreExecute() {
@@ -35,7 +36,11 @@ public class GetRequest extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String ligne){
-
+    protected void onPostExecute(String ligne)
+    {
+        //delegate.processFinish(ligne);
+        super.onPostExecute(ligne);
     }
+
+
 }
