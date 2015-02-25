@@ -108,7 +108,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
             if (result != null)
             {
-                if(result.length() < 70)
+                if(result.length() > 70)
                 {
 
                     try {
@@ -118,8 +118,18 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                         for (int i = 0; i < jArray_articles.length(); i++) {
                             JSONObject jsonObject = jArray_articles.getJSONObject(i);
 
-                            if (!cat.contains(all_cat.get(jsonObject.getInt("category_id"))))
-                                cat.add(all_cat.get(jsonObject.getInt("category_id")));
+                            int n_cat = jsonObject.getInt("category_id");
+
+                            for(int j = 0;j<jArray_cat.length();j++)
+                            {
+                                JSONObject jObj = jArray_cat.getJSONObject(j);
+
+                                if(n_cat == jObj.getInt("id"))
+                                {
+                                    if(!cat.contains(jObj.getString("name")))
+                                    cat.add(jObj.getString("name"));
+                                }
+                            }
                         }
 
                     } catch (JSONException e) {
@@ -130,18 +140,12 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
 
-                } any_restaurants.setVisibility(View.VISIBLE);
+                } else any_restaurants.setVisibility(View.VISIBLE);
 
             } else Toast.makeText(getApplicationContext(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
 
         } else Toast.makeText(getApplicationContext(), "Pas de connexion internet valide", Toast.LENGTH_LONG).show();
     }
-
-
-
-
-
-
 
 
 
@@ -183,14 +187,43 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
 
 
+
+
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
         String item = parent.getItemAtPosition(pos).toString();
 
-        //int index = java.util.Arrays.asList(string_cat).indexOf(item);
+
+
+       for(int i=0;i<jArray_cat.length();i++)
+       {
+           try {
+               JSONObject jObj = jArray_cat.getJSONObject(i);
+
+               
+
+
+           } catch (JSONException e) {
+               e.printStackTrace();
+           }
+
+
+       }
+
+
+
+
+
+
+
+
+
+
+
         int index = all_cat.indexOf(item);
-        index = index +1;
+        //index = index +1;
 
         Toast.makeText(getApplicationContext(),item + " " + index,Toast.LENGTH_SHORT).show();
 
