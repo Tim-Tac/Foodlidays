@@ -194,7 +194,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
         String item = parent.getItemAtPosition(pos).toString();
-
+        int index = 0;
 
 
        for(int i=0;i<jArray_cat.length();i++)
@@ -202,7 +202,10 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
            try {
                JSONObject jObj = jArray_cat.getJSONObject(i);
 
-               
+               if(jObj.getString("name").equals(item))
+               {
+                   index = jObj.getInt("id");
+               }
 
 
            } catch (JSONException e) {
@@ -211,21 +214,6 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
 
        }
-
-
-
-
-
-
-
-
-
-
-
-        int index = all_cat.indexOf(item);
-        //index = index +1;
-
-        Toast.makeText(getApplicationContext(),item + " " + index,Toast.LENGTH_SHORT).show();
 
         liste_articles.clear();
 
