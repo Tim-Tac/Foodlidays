@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class Card extends Activity {
@@ -16,6 +18,16 @@ public class Card extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
+
+        TextView empty = (TextView)findViewById(R.id.empty);
+        TextView yourCard = (TextView)findViewById(R.id.card);
+
+        if(panier == null)
+        {
+            empty.setVisibility(View.VISIBLE);
+            yourCard.setVisibility(View.GONE);
+        }
+
     }
 
 

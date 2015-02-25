@@ -162,17 +162,12 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                //TODO changer les icones ?
                 Intent intent = new Intent(FoodCard.this, Settings.class);
                 startActivity(intent);
                 return true;
             case R.id.panier:
-                if(Card.panier == null) Toast.makeText(getApplicationContext(),R.string.empty_card,Toast.LENGTH_SHORT).show();
-                else
-                {
-                    Intent intent2 = new Intent(FoodCard.this, Card.class);
-                    startActivity(intent2);
-                }
+                Intent intent2 = new Intent(FoodCard.this, Card.class);
+                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -180,22 +175,11 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     }
 
 
-
-
-
-
-
-
-
-
-
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
         String item = parent.getItemAtPosition(pos).toString();
         int index = 0;
-
 
        for(int i=0;i<jArray_cat.length();i++)
        {
@@ -207,11 +191,9 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                    index = jObj.getInt("id");
                }
 
-
            } catch (JSONException e) {
                e.printStackTrace();
            }
-
 
        }
 
@@ -229,6 +211,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                     myArt.name = js.getString("name");
                     myArt.detail = js.getString("note");
                     myArt.prix = js.getString("price");
+                    myArt.image = js.getString("image");
 
                     liste_articles.add(myArt);
                 }
@@ -248,6 +231,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                 Articles article = (Articles)myList.getItemAtPosition(position);
 
                 Toast.makeText(getApplicationContext(), "choisi : " + article.name, Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -255,7 +239,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
     @Override
     public void processFinish(String output) {
-        Toast.makeText(getApplicationContext(), output, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "ici : " + output, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -289,10 +273,10 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
             Articles art = liste_articles.get(position);
 
-            Picasso.with(getApplicationContext()).load("http://i.imgur.com/DvpvklR.png").into(pic);
+            Picasso.with(getApplicationContext()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + art.image).into(pic);
             name.setText(art.name);
             descr.setText(art.detail);
-            prix.setText(art.prix + "/pc");
+            prix.setText(art.prix + " €");
 
             return convertView;
 

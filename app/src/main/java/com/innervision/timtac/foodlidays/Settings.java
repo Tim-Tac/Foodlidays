@@ -61,12 +61,8 @@ public class Settings extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.panier:
-                if(Card.panier == null) Toast.makeText(getApplicationContext(), R.string.empty_card, Toast.LENGTH_SHORT).show();
-                else
-                {
-                    Intent intent2 = new Intent(Settings.this, Card.class);
-                    startActivity(intent2);
-                }
+                Intent intent = new Intent(Settings.this, Card.class);
+                startActivity(intent);
                 return true;
             case R.id.pizza:
                 Intent intent2 = new Intent(Settings.this, FoodCard.class);
