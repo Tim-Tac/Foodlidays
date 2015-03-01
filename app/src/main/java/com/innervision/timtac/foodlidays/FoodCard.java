@@ -1,6 +1,8 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,10 +69,6 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
             try {
 
                 result_cat = new GetRequest().execute(url_cat).get();
-
-                //GetRequest get = new GetRequest();
-                //get.delegate = this;
-
 
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -148,7 +147,6 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -178,9 +176,10 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
-        String item = parent.getItemAtPosition(pos).toString();
-        int index = 0;
+       String item = parent.getItemAtPosition(pos).toString();
+       int index = 0;
 
+        /*** on récupère l'id de la catégorie ***/
        for(int i=0;i<jArray_cat.length();i++)
        {
            try {
@@ -199,6 +198,8 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
         liste_articles.clear();
 
+
+        /*** on liste les articles de la catégorie ***/
         for(int i=0;i<jArray_articles.length();i++)
         {
             try {
@@ -224,13 +225,47 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         CustomArrayAdapter ad = new CustomArrayAdapter();
         myList.setAdapter(ad);
 
+
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Articles article = (Articles)myList.getItemAtPosition(position);
 
-                Toast.makeText(getApplicationContext(), "choisi : " + article.name, Toast.LENGTH_SHORT).show();
+
+                /********************* on lance un dialog pour commander ***************************/
+                AlertDialog.Builder builder = new AlertDialog.Builder(FoodCard.this);
+
+                LayoutInflater inflater = LayoutInflater.from(getApplicationContext()); //FoodCard.this.getLayoutInflater();
+                View dialog_view = inflater.inflate(R.layout.dialog_email, null);
+
+
+                ImageView im = (ImageView) dialog_view.findViewById(R.id.big_pic);
+                Picasso.with(getApplicationContext()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + article.image).into(im);
+                final NumberPicker pick = (NumberPicker)dialog_view.findViewById(R.id.numberPicker);
+                pick.setMaxValue(50);
+                pick.setMinValue(1);
+
+                builder.setTitle(article.name);
+                builder.setView(dialog_view);
+
+                builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        Toast.makeText(getApplicationContext(),String.valueOf(pick.getValue()), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
             }
         });
@@ -295,7 +330,5 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-
 
 }
