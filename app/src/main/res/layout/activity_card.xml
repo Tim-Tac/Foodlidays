@@ -6,25 +6,92 @@
     android:background="@drawable/bg_food_else2"
     tools:context="com.innervision.timtac.foodlidays.Card">
 
+    <RelativeLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/order_ligne_info"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nom du plat"
+            android:id="@+id/order_nom_plat"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="55dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="€/pc"
+            android:id="@+id/order_prix_pc"
+            android:layout_marginRight="160dp"
+            android:layout_alignParentRight="true"
+            android:textSize="16sp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="quantité"
+            android:id="@+id/order_quantity"
+            android:layout_alignParentRight="true"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="90dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sous total"
+            android:id="@+id/order_prix_st"
+            android:layout_alignParentRight="true"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_alignBottom="@+id/order_ligne_info"
+        android:background="@drawable/edit_text_login"
+        />
+
+    <ListView
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/order_list"
+        android:layout_marginBottom="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
     <TextView
-        android:id="@+id/empty"
+        android:id="@+id/card_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/empty_card"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textStyle="italic"
-        android:visibility="gone"
         />
 
-    <TextView
-        android:id="@+id/card"
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vos articles : "
-        android:textSize="18sp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp" />
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:text="Passer la commande"
+        android:id="@+id/order_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"/>
 
 </RelativeLayout>

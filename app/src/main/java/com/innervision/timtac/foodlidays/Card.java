@@ -7,27 +7,39 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
-
+import java.util.ArrayList;
 
 public class Card extends Activity {
 
-    public static String panier;
+    public static ArrayList<Order_Articles> myOrderArticles = new ArrayList<>();
+    public static ListView orderList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
 
-        TextView empty = (TextView)findViewById(R.id.empty);
-        TextView yourCard = (TextView)findViewById(R.id.card);
+        TextView empty = (TextView)findViewById(R.id.card_empty);
+        orderList = (ListView)findViewById(R.id.order_list);
+        Button command = (Button)findViewById(R.id.order_button);
 
-        if(panier == null)
+        if(myOrderArticles.size() == 0)
         {
-            empty.setVisibility(View.VISIBLE);
-            yourCard.setVisibility(View.GONE);
+            orderList.setVisibility(View.GONE);
+            command.setVisibility(View.GONE);
         }
+        else
+        {
+            /*** Si on il y a des articles dans le panier ***/
 
+            empty.setVisibility(View.GONE);
+
+
+
+        }
     }
 
 

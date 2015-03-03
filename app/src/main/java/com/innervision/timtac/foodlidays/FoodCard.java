@@ -230,20 +230,20 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Articles article = (Articles)myList.getItemAtPosition(position);
+                final Articles article = (Articles)myList.getItemAtPosition(position);
 
 
                 /********************* on lance un dialog pour commander ***************************/
                 AlertDialog.Builder builder = new AlertDialog.Builder(FoodCard.this);
 
                 LayoutInflater inflater = LayoutInflater.from(getApplicationContext()); //FoodCard.this.getLayoutInflater();
-                View dialog_view = inflater.inflate(R.layout.dialog_email, null);
+                View dialog_view = inflater.inflate(R.layout.dialog_article, null);
 
 
                 ImageView im = (ImageView) dialog_view.findViewById(R.id.big_pic);
                 Picasso.with(getApplicationContext()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + article.image).into(im);
                 final NumberPicker pick = (NumberPicker)dialog_view.findViewById(R.id.numberPicker);
-                pick.setMaxValue(50);
+                pick.setMaxValue(25);
                 pick.setMinValue(1);
 
                 builder.setTitle(article.name);
@@ -251,9 +251,12 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
                 builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Order_Articles order = new Order_Articles();
+                        order.name = article.name;
+                        order.quantity = pick.getValue();
+                        Card.myOrderArticles.add(order);
 
-                        Toast.makeText(getApplicationContext(),String.valueOf(pick.getValue()), Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(),"article ajouté au panier !",Toast.LENGTH_SHORT).show();
                     }
                 });
 
