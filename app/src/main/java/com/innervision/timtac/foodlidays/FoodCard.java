@@ -254,9 +254,11 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                         Order_Articles order = new Order_Articles();
                         order.name = article.name;
                         order.quantity = pick.getValue();
+                        order.image = article.image;
+                        order.prix = article.prix;
                         Card.myOrderArticles.add(order);
 
-                        Toast.makeText(getApplicationContext(),"article ajouté au panier !",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"article ajouté au panier !",Toast.LENGTH_LONG).show();
                     }
                 });
 
