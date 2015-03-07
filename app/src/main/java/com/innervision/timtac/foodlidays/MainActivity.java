@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.util.Style;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import org.apache.http.HttpResponse;
@@ -117,7 +120,7 @@ public class MainActivity extends Activity {
                                     Log.e("log_tag", "error in parsing " + e.toString());
                                 }
 
-                                Toast.makeText(getApplicationContext(), R.string.signed_in, Toast.LENGTH_SHORT).show();
+                                SuperToast.create(getApplicationContext(),getString(R.string.signed_in),SuperToast.Duration.MEDIUM,Style.getStyle(Style.GREEN, SuperToast.Animations.POPUP)).show();
 
                                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 
@@ -142,7 +145,7 @@ public class MainActivity extends Activity {
                     }
                     else Toast.makeText(getApplicationContext(),R.string.email_invalid,Toast.LENGTH_SHORT).show();
                 }
-                else Toast.makeText(getApplicationContext(),R.string.need_two_field,Toast.LENGTH_SHORT).show();
+                else SuperToast.create(getApplicationContext(), getString(R.string.need_two_field), SuperToast.Duration.MEDIUM, Style.getStyle(Style.RED,SuperToast.Animations.FLYIN)).show();
             }
         });
 

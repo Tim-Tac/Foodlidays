@@ -6,54 +6,58 @@
     android:background="@drawable/bg_food_else2"
     tools:context="com.innervision.timtac.foodlidays.Card">
 
-    <RelativeLayout
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:id="@+id/order_ligne_info"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:layout_width="120dp"
+        <LinearLayout
+            android:id="@+id/order_ligne_info"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nom du plat"
-            android:id="@+id/order_nom_plat"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="60dp"/>
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Prix"
-            android:id="@+id/order_prix_pc"
-            android:layout_marginRight="140dp"
-            android:layout_alignParentRight="true"
-            android:textSize="16sp"
-            android:layout_centerVertical="true" />
+            <ImageView
+                android:id="@+id/order_img"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quantité"
-            android:id="@+id/order_quantity"
-            android:layout_alignParentRight="true"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="70dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="8dp"
+                android:gravity="center_vertical"
+                android:text="Nom du plat"
+                android:layout_weight="1"
+                android:id="@+id/order_nom_plat"
+                android:textSize="14sp"
+                android:layout_marginLeft="8dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total"
-            android:id="@+id/order_prix_st"
-            android:layout_alignParentRight="true"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"/>
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:layout_weight="0"
+                android:text="Prix"
+                android:id="@+id/order_prix_pc"
+                android:textSize="14sp" />
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:text="Quantité"
+                android:gravity="center"
+                android:layout_weight="0"
+                android:id="@+id/order_quantity"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_weight="0"
+                android:text="Total"
+                android:id="@+id/order_prix_st"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -66,7 +70,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="45dp"
         android:id="@+id/order_list"
-        android:layout_marginBottom="130dp"
+        android:layout_marginBottom="125dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </ListView>
@@ -90,7 +94,7 @@
         android:id="@+id/order_total"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="80dp"
+        android:layout_marginRight="50dp"
         android:layout_marginBottom="80dp"/>
 
     <Button

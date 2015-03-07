@@ -5,30 +5,12 @@
     android:orientation="vertical"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_margin="15dp"
-        android:id="@+id/big_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/app_name" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
         android:layout_margin="15dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quantité : "
-            android:layout_gravity="center_vertical"
-            android:textColor="#000000"
-            android:textSize="17sp"
-            android:paddingRight="15dp"/>
-
 
         <NumberPicker
             android:layout_width="wrap_content"
@@ -37,6 +19,6 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"/>
 
-        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

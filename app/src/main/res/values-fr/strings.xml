@@ -23,4 +23,6 @@
     <string name="nd_floor_room">e étage, chambre </string>
     <string name="card">Panier</string>
     <string name="menu">Menu</string>
+    <string name="any_restaurant">Désolé, nous n\'avons trouvé aucun restaurants ouvert dans votre zone ...</string>
+    <string name="title_activity_start">Start</string>
 </resources>

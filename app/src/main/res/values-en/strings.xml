@@ -23,4 +23,6 @@
     <string name="nd_floor_room">e foor,  room</string>
     <string name="card">Shopping cart</string>
     <string name="menu">Menu</string>
+    <string name="any_restaurant">Sorry, we didn\'t find any restaurant open right now in your area ...</string>
+    <string name="title_activity_start">Start</string>
 </resources>

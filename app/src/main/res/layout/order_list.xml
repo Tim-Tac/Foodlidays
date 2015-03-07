@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/order_img"
@@ -17,44 +13,41 @@
             />
 
         <TextView
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="8dp"
+            android:gravity="center_vertical"
             android:text="Nom du plat"
+            android:layout_weight="1"
             android:id="@+id/order_nom_plat"
-            android:textSize="14sp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="60dp"/>
+            android:textSize="14sp"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_weight="0"
             android:text="Prix"
             android:id="@+id/order_prix_pc"
-            android:layout_marginRight="140dp"
-            android:layout_alignParentRight="true"
-            android:textSize="14sp"
-            android:layout_centerVertical="true" />
+            android:textSize="14sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
             android:text="Quantité"
+            android:gravity="center"
+            android:layout_weight="0"
             android:id="@+id/order_quantity"
-            android:layout_alignParentRight="true"
-            android:textSize="14sp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="70dp"/>
+            android:textSize="14sp"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0"
             android:text="Total"
             android:id="@+id/order_prix_st"
-            android:layout_alignParentRight="true"
-            android:textSize="14sp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"/>
-
-    </RelativeLayout>
+            android:textSize="14sp"/>
 
 </LinearLayout>

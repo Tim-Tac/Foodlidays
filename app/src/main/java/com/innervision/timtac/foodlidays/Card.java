@@ -1,6 +1,8 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,10 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +46,7 @@ public class Card extends Activity {
             orderList.setVisibility(View.GONE);
             command.setVisibility(View.GONE);
             order_total.setVisibility(View.GONE);
+
         }
         else
         {
@@ -56,16 +61,69 @@ public class Card extends Activity {
             {
                 Total = Total + (Float.parseFloat(myOrderArticles.get(i).prix)*myOrderArticles.get(i).quantity);
             }
-            order_total.setText("Total : " + Total + " €");
-
-
+            order_total.setText("Total : " + round(Total,3) + " €");
 
             command.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(),"Pas encore dispo", Toast.LENGTH_SHORT).show();
+
+
                 }
             });
+
+
+            orderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                    final Order_Articles article = (Order_Articles)orderList.getItemAtPosition(position);
+
+                    /******* Dialog pour supprimer l'item ou modifier la quantité *******/
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Card.this);
+                    LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                    View quantity_view = inflater.inflate(R.layout.option_order, null);
+
+                    final NumberPicker pick = (NumberPicker)quantity_view.findViewById(R.id.numberPicker);
+                    pick.setMaxValue(25);
+                    pick.setMinValue(1);
+                    pick.setValue(article.quantity);
+                    FoodCard.setNumberPickerTextColor(pick,0xff000000);
+
+
+                    builder.setTitle("Quantité " + article.name);
+                    builder.setView(quantity_view);
+
+                    builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //ne rien faire
+                        }
+                    });
+
+                    builder.setPositiveButton("Modifier la quantité", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            article.quantity = pick.getValue();
+                            finish();
+                            startActivity(getIntent());
+                        }
+                    });
+
+                    builder.setNeutralButton("Supprimer l'article", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            myOrderArticles.remove(position);
+                            finish();
+                            startActivity(getIntent());
+                        }
+                    });
+
+
+
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+
 
         }
     }
@@ -109,13 +167,6 @@ public class Card extends Activity {
 
             prix_st.setText(String.valueOf(round(art.quantity*(Float.parseFloat(art.prix)),2)));
 
-            quantite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(),art.name,Toast.LENGTH_LONG).show();
-                }
-            });
-
             return convertView;
 
         }
@@ -150,4 +201,5 @@ public class Card extends Activity {
         bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
         return bd.floatValue();
     }
+
 }

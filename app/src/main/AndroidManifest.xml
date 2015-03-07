@@ -5,46 +5,40 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <activity
-            android:name=".Start"
-            android:label="Foodlidays"
-            android:theme="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar">
+            <activity
+                android:name=".MainActivity"
+                android:label="@string/app_name"
+                android:theme="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar"
+                android:screenOrientation="portrait">
+            </activity>
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <activity
+                android:name=".FoodCard"
+                android:label="@string/menu" >
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+                <intent-filter android:label="@string/app_name">
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
 
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.DialogWhenLarge.NoActionBar"
-            android:screenOrientation="portrait">
-        </activity>
+            </activity>
 
-        <activity
-            android:name=".FoodCard"
-            android:label="@string/menu" >
+            <activity
+                android:name=".Settings"
+                android:label="@string/action_settings" >
+            </activity>
 
-        </activity>
-
-        <activity
-            android:name=".Settings"
-            android:label="@string/action_settings" >
-        </activity>
-
-        <activity
-            android:name=".Card"
-            android:label="@string/card" >
-        </activity>
+            <activity
+                android:name=".Card"
+                android:label="@string/card" >
+            </activity>
 
     </application>
 

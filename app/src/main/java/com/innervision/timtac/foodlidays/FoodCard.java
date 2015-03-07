@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -26,6 +31,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -51,6 +58,30 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_card);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(FoodCard.this);
+        String is_co = prefs.getString("session_room_number","");
+
+        if(!is_co.equals(""))
+        {
+            MainActivity.session_room_number = is_co;
+            MainActivity.session_email = prefs.getString("session_email","email");
+            MainActivity.session_room = prefs.getString("session_room","number");
+            MainActivity.session_city = prefs.getString("session_city","city");
+            MainActivity.session_country = prefs.getString("session_country","country");
+            MainActivity.session_floor = prefs.getString("session_floor","floor");
+            MainActivity.session_id = prefs.getString("session_id","id");
+            MainActivity.session_street_address = prefs.getString("session_street_address","address");
+            MainActivity.session_type = prefs.getString("session_type","type");
+            MainActivity.session_zip = prefs.getString("session_zip","zip");
+            MainActivity.session_user_id = prefs.getString("session_user_id","user_id");
+        }
+        else
+        {
+            Intent intent = new Intent(FoodCard.this, MainActivity.class);
+            startActivity(intent);
+        }
+
 
         myList = (ListView)findViewById(R.id.list);
         any_restaurants = (TextView)findViewById(R.id.any_restaurant);
@@ -235,8 +266,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
                 /********************* on lance un dialog pour commander ***************************/
                 AlertDialog.Builder builder = new AlertDialog.Builder(FoodCard.this);
-
-                LayoutInflater inflater = LayoutInflater.from(getApplicationContext()); //FoodCard.this.getLayoutInflater();
+                LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
                 View dialog_view = inflater.inflate(R.layout.dialog_article, null);
 
 
@@ -245,18 +275,35 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                 final NumberPicker pick = (NumberPicker)dialog_view.findViewById(R.id.numberPicker);
                 pick.setMaxValue(25);
                 pick.setMinValue(1);
+                setNumberPickerTextColor(pick,0xff000000);
 
                 builder.setTitle(article.name);
                 builder.setView(dialog_view);
 
                 builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Order_Articles order = new Order_Articles();
-                        order.name = article.name;
-                        order.quantity = pick.getValue();
-                        order.image = article.image;
-                        order.prix = article.prix;
-                        Card.myOrderArticles.add(order);
+
+                        Boolean isAlreadyIn = false;
+                        for(Order_Articles a : Card.myOrderArticles)
+                        {
+                            // Si un item dans la liste possède le même nom, on augmente juste la quantité
+                            if(a.name.equals(article.name))
+                            {
+                                isAlreadyIn = true;
+                                a.quantity += pick.getValue();
+                            }
+                        }
+
+
+                        if(!isAlreadyIn) // Si pas déjà dedans, on rajoute l'item
+                        {
+                            Order_Articles order = new Order_Articles();
+                            order.name = article.name;
+                            order.quantity = pick.getValue();
+                            order.image = article.image;
+                            order.prix = article.prix;
+                            Card.myOrderArticles.add(order);
+                        }
 
                         Toast.makeText(getApplicationContext(),"article ajouté au panier !",Toast.LENGTH_LONG).show();
                     }
@@ -334,6 +381,35 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static boolean setNumberPickerTextColor(NumberPicker numberPicker, int color)
+    {
+        final int count = numberPicker.getChildCount();
+        for(int i = 0; i < count; i++){
+            View child = numberPicker.getChildAt(i);
+            if(child instanceof EditText){
+                try{
+                    Field selectorWheelPaintField = numberPicker.getClass()
+                            .getDeclaredField("mSelectorWheelPaint");
+                    selectorWheelPaintField.setAccessible(true);
+                    ((Paint)selectorWheelPaintField.get(numberPicker)).setColor(color);
+                    ((EditText)child).setTextColor(color);
+                    numberPicker.invalidate();
+                    return true;
+                }
+                catch(NoSuchFieldException e){
+                    Log.w("setNumberPicker", e);
+                }
+                catch(IllegalAccessException e){
+                    Log.w("setNumberPicker", e);
+                }
+                catch(IllegalArgumentException e){
+                    Log.w("setNumberPicker", e);
+                }
+            }
+        }
+        return false;
     }
 
 }
