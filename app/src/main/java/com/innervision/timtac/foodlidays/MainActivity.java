@@ -137,7 +137,7 @@ public class MainActivity extends Activity {
                                 prefs.edit().putString("session_zip", session_zip).apply();
 
 
-                                Intent intent = new Intent(MainActivity.this, FoodCard.class);
+                                Intent intent = new Intent(MainActivity.this, Disposer.class);
                                 startActivity(intent);
                             }
                         }

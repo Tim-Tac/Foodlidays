@@ -5,29 +5,32 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 
-public class Settings extends Activity {
+public class Settings extends Fragment {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
 
-        TextView identifiant = (TextView)findViewById(R.id.indentifiant);
-        TextView email = (TextView)findViewById(R.id.email);
-        TextView adresse = (TextView)findViewById(R.id.adresse);
-        TextView zip = (TextView)findViewById(R.id.zip);
-        TextView ville = (TextView)findViewById(R.id.ville);
-        TextView etage = (TextView)findViewById(R.id.etage);
-        TextView numero = (TextView)findViewById(R.id.numero);
-        Button deco = (Button)findViewById(R.id.deco);
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
+        View v = inflater.inflate(R.layout.activity_settings, group, false);
+
+        TextView identifiant = (TextView)v.findViewById(R.id.indentifiant);
+        TextView email = (TextView)v.findViewById(R.id.email);
+        TextView adresse = (TextView)v.findViewById(R.id.adresse);
+        TextView zip = (TextView)v.findViewById(R.id.zip);
+        TextView ville = (TextView)v.findViewById(R.id.ville);
+        TextView etage = (TextView)v.findViewById(R.id.etage);
+        TextView numero = (TextView)v.findViewById(R.id.numero);
+        Button deco = (Button)v.findViewById(R.id.deco);
 
         identifiant.setText(MainActivity.session_room_number);
         email.setText(MainActivity.session_email);
@@ -40,16 +43,29 @@ public class Settings extends Activity {
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Settings.this);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 prefs.edit().clear().apply();
-                Intent intent= new Intent(Settings.this, MainActivity.class);
+                Intent intent= new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
         });
 
+        return v;
     }
 
+
+
+
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_settings);
+
+
+
+    }
+
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -70,5 +86,5 @@ public class Settings extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 }

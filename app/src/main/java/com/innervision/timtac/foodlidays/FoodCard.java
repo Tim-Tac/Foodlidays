@@ -2,6 +2,7 @@ package com.innervision.timtac.foodlidays;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,7 +37,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class FoodCard extends Activity implements AdapterView.OnItemSelectedListener, AsyncResponse {
+public class FoodCard extends Fragment implements AdapterView.OnItemSelectedListener, AsyncResponse {
 
     public static String result = "";
     public static String result_cat = "";
@@ -53,13 +54,15 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
     public static ArrayList<Articles> liste_articles = new ArrayList<>();
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
+        View v = inflater.inflate(R.layout.activity_food_card, group, false);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_food_card);
+        myList = (ListView) v.findViewById(R.id.list);
+        any_restaurants = (TextView) v.findViewById(R.id.any_restaurant);
+        spinner = (Spinner) v.findViewById(R.id.spinner);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(FoodCard.this);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String is_co = prefs.getString("session_room_number","");
 
         if(!is_co.equals(""))
@@ -78,15 +81,13 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         }
         else
         {
-            Intent intent = new Intent(FoodCard.this, MainActivity.class);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
 
 
-        myList = (ListView)findViewById(R.id.list);
-        any_restaurants = (TextView)findViewById(R.id.any_restaurant);
 
-        spinner = (Spinner)findViewById(R.id.spinner);
+
         spinner.setOnItemSelectedListener(this);
 
 
@@ -94,7 +95,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
         if(isNetworkAvailable())
         {
 
-            /*************************** Récupération des catégories *******************************/
+            //*************************** Récupération des catégories ******************************
 
             String url_cat = "http://foodlidays.dev.innervisiongroup.com/api/v1/category";
             try {
@@ -121,11 +122,11 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            } else Toast.makeText(getApplicationContext(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
+            } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
 
 
 
-            /********************* Création de la liste des catégories disponibles *****************/
+            //********************* Création de la liste des catégories disponibles ****************
 
             String zip_code_temp = "1435";
             String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/" + zip_code_temp;
@@ -157,7 +158,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                                 if(n_cat == jObj.getInt("id"))
                                 {
                                     if(!cat.contains(jObj.getString("name")))
-                                    cat.add(jObj.getString("name"));
+                                        cat.add(jObj.getString("name"));
                                 }
                             }
                         }
@@ -166,19 +167,31 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                         e.printStackTrace();
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, cat);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cat);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
 
                 } else any_restaurants.setVisibility(View.VISIBLE);
 
-            } else Toast.makeText(getApplicationContext(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
+            } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
 
-        } else Toast.makeText(getApplicationContext(), "Pas de connexion internet valide", Toast.LENGTH_LONG).show();
+        } else Toast.makeText(getActivity(), "Pas de connexion internet valide", Toast.LENGTH_LONG).show();
+
+
+        return v;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_food_card);
+
+
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -201,7 +214,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
 
     @Override
@@ -265,13 +278,13 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
 
                 /********************* on lance un dialog pour commander ***************************/
-                AlertDialog.Builder builder = new AlertDialog.Builder(FoodCard.this);
-                LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
                 View dialog_view = inflater.inflate(R.layout.dialog_article, null);
 
 
                 ImageView im = (ImageView) dialog_view.findViewById(R.id.big_pic);
-                Picasso.with(getApplicationContext()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + article.image).into(im);
+                Picasso.with(getActivity()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + article.image).into(im);
                 final NumberPicker pick = (NumberPicker)dialog_view.findViewById(R.id.numberPicker);
                 pick.setMaxValue(25);
                 pick.setMinValue(1);
@@ -305,7 +318,9 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                             Card.myOrderArticles.add(order);
                         }
 
-                        Toast.makeText(getApplicationContext(),"article ajouté au panier !",Toast.LENGTH_LONG).show();
+                        Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+
+                        Toast.makeText(getActivity(),"article ajouté au panier !",Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -326,7 +341,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
     @Override
     public void processFinish(String output) {
-        Toast.makeText(getApplicationContext(), "ici : " + output, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "ici : " + output, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -360,7 +375,7 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
             Articles art = liste_articles.get(position);
 
-            Picasso.with(getApplicationContext()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + art.image).into(pic);
+            Picasso.with(getActivity()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + art.image).into(pic);
             name.setText(art.name);
             descr.setText(art.detail);
             prix.setText(art.prix + " €");
@@ -377,10 +392,11 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
 
 
     private boolean isNetworkAvailable() {
-        getApplicationContext();
+        /*getActivity();
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();*/
+        return true;
     }
 
     public static boolean setNumberPickerTextColor(NumberPicker numberPicker, int color)

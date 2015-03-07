@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,27 +20,29 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class Card extends Activity {
+public class Card extends Fragment {
 
     public static ArrayList<Order_Articles> myOrderArticles = new ArrayList<>();
     public static ListView orderList;
     private float Total;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card);
+    //UI
+    TextView empty;
+    Button command;
+    TextView order_total;
 
-        TextView empty = (TextView)findViewById(R.id.card_empty);
-        orderList = (ListView)findViewById(R.id.order_list);
-        Button command = (Button)findViewById(R.id.order_button);
-        TextView order_total = (TextView)findViewById(R.id.order_total);
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
+        View v = inflater.inflate(R.layout.activity_card, group, false);
+
+        empty = (TextView)v.findViewById(R.id.card_empty);
+        orderList = (ListView)v.findViewById(R.id.order_list);
+        command = (Button)v.findViewById(R.id.order_button);
+        order_total = (TextView)v.findViewById(R.id.order_total);
 
         if(myOrderArticles.size() == 0)
         {
@@ -56,6 +60,7 @@ public class Card extends Activity {
             CustomArrayAdapter ad = new CustomArrayAdapter();
             orderList.setAdapter(ad);
 
+            Total = 0;
             for(int i = 0; i < myOrderArticles.size() ; i++)
             {
                 Total = Total + (Float.parseFloat(myOrderArticles.get(i).prix)*myOrderArticles.get(i).quantity);
@@ -79,8 +84,8 @@ public class Card extends Activity {
 
                     /******* Dialog pour supprimer l'item ou modifier la quantité *******/
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Card.this);
-                    LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    LayoutInflater inflater = LayoutInflater.from(getActivity());
                     View quantity_view = inflater.inflate(R.layout.option_order, null);
 
                     final NumberPicker pick = (NumberPicker)quantity_view.findViewById(R.id.numberPicker);
@@ -102,16 +107,14 @@ public class Card extends Activity {
                     builder.setPositiveButton("Modifier la quantité", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             article.quantity = pick.getValue();
-                            finish();
-                            startActivity(getIntent());
+                            Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
                         }
                     });
 
                     builder.setNeutralButton("Supprimer l'article", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             myOrderArticles.remove(position);
-                            finish();
-                            startActivity(getIntent());
+                            Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
                         }
                     });
 
@@ -125,6 +128,20 @@ public class Card extends Activity {
 
 
         }
+
+
+        return v;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_card);
+
+
+
+
     }
 
 
@@ -159,7 +176,7 @@ public class Card extends Activity {
 
             final Order_Articles art = myOrderArticles.get(position);
 
-            Picasso.with(getApplicationContext()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + art.image).into(order_pic);
+            Picasso.with(getActivity()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + art.image).into(order_pic);
             nom_plat.setText(art.name);
             prix_pc.setText(art.prix + " €");
             quantite.setText(String.valueOf(art.quantity));
@@ -172,7 +189,7 @@ public class Card extends Activity {
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -193,7 +210,7 @@ public class Card extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
     public static float round(float d, int decimalPlace) {
         BigDecimal bd = new BigDecimal(Float.toString(d));
