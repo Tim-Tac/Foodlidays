@@ -398,14 +398,8 @@ public class FoodCard extends Activity implements AdapterView.OnItemSelectedList
                     numberPicker.invalidate();
                     return true;
                 }
-                catch(NoSuchFieldException e){
-                    Log.w("setNumberPicker", e);
-                }
-                catch(IllegalAccessException e){
-                    Log.w("setNumberPicker", e);
-                }
-                catch(IllegalArgumentException e){
-                    Log.w("setNumberPicker", e);
+                catch(NoSuchFieldException | IllegalAccessException | IllegalArgumentException e){
+                    Log.w("setNumberPickerError", e);
                 }
             }
         }
