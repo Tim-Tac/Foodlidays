@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/home_slide1"
-    tools:context="com.innervision.timtac.foodlidays.FoodCard">
+    tools:context="com.innervision.timtac.foodlidays.FragmentMenu">
 
     <LinearLayout
         android:layout_width="match_parent"

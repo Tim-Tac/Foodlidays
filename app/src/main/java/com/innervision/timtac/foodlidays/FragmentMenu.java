@@ -1,21 +1,15 @@
 package com.innervision.timtac.foodlidays;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,12 +26,12 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import com.innervision.timtac.foodlidays.UtilitiesClass.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class FoodCard extends Fragment implements AdapterView.OnItemSelectedListener, AsyncResponse {
+public class FragmentMenu extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public static String result = "";
     public static String result_cat = "";
@@ -51,7 +45,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
 
     public static ArrayList<String> all_cat = new ArrayList<>();
     public static ArrayList<String> cat = new ArrayList<>();
-    public static ArrayList<Articles> liste_articles = new ArrayList<>();
+    public static ArrayList<Article> liste_articles = new ArrayList<>();
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
@@ -97,7 +91,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
 
             //*************************** Récupération des catégories ******************************
 
-            String url_cat = "http://foodlidays.dev.innervisiongroup.com/api/v1/category";
+            String url_cat = UtilitiesConfig.url_base + "/api/v1/category";
             try {
 
                 result_cat = new GetRequest().execute(url_cat).get();
@@ -129,7 +123,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
             //********************* Création de la liste des catégories disponibles ****************
 
             String zip_code_temp = "1435";
-            String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/food/cat/all/" + zip_code_temp;
+            String url = UtilitiesConfig.url_base + "/api/v1/food/cat/all/" + zip_code_temp;
 
             try {
                 result = new GetRequest().execute(url).get();
@@ -185,18 +179,14 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_food_card);
-
 
     }
 
 
     /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-
-        return true;
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 
@@ -204,11 +194,11 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                Intent intent = new Intent(FoodCard.this, Settings.class);
+                Intent intent = new Intent(getActivity(), Settings.class);
                 startActivity(intent);
                 return true;
             case R.id.panier:
-                Intent intent2 = new Intent(FoodCard.this, Card.class);
+                Intent intent2 = new Intent(getActivity(), Card.class);
                 startActivity(intent2);
                 return true;
             default:
@@ -252,7 +242,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
 
                 if(index == js.getInt("category_id"))
                 {
-                    Articles myArt = new Articles();
+                    Article myArt = new Article();
                     myArt.name = js.getString("name");
                     myArt.detail = js.getString("note");
                     myArt.prix = js.getString("price");
@@ -274,7 +264,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final Articles article = (Articles)myList.getItemAtPosition(position);
+                final Article article = (Article)myList.getItemAtPosition(position);
 
 
                 /********************* on lance un dialog pour commander ***************************/
@@ -284,7 +274,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
 
 
                 ImageView im = (ImageView) dialog_view.findViewById(R.id.big_pic);
-                Picasso.with(getActivity()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + article.image).into(im);
+                Picasso.with(getActivity()).load(UtilitiesConfig.url_base + "/uploads/" + article.image).into(im);
                 final NumberPicker pick = (NumberPicker)dialog_view.findViewById(R.id.numberPicker);
                 pick.setMaxValue(25);
                 pick.setMinValue(1);
@@ -297,7 +287,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
                     public void onClick(DialogInterface dialog, int id) {
 
                         Boolean isAlreadyIn = false;
-                        for(Order_Articles a : Card.myOrderArticles)
+                        for(Order_Article a : FragmentCard.myOrderArticles)
                         {
                             // Si un item dans la liste possède le même nom, on augmente juste la quantité
                             if(a.name.equals(article.name))
@@ -310,12 +300,12 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
 
                         if(!isAlreadyIn) // Si pas déjà dedans, on rajoute l'item
                         {
-                            Order_Articles order = new Order_Articles();
+                            Order_Article order = new Order_Article();
                             order.name = article.name;
                             order.quantity = pick.getValue();
                             order.image = article.image;
                             order.prix = article.prix;
-                            Card.myOrderArticles.add(order);
+                            FragmentCard.myOrderArticles.add(order);
                         }
 
                         Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
@@ -337,11 +327,6 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
             }
         });
 
-    }
-
-    @Override
-    public void processFinish(String output) {
-        Toast.makeText(getActivity(), "ici : " + output, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -373,7 +358,7 @@ public class FoodCard extends Fragment implements AdapterView.OnItemSelectedList
             TextView prix = (TextView)convertView.findViewById(R.id.prix);
             ImageView pic = (ImageView)convertView.findViewById(R.id.img);
 
-            Articles art = liste_articles.get(position);
+            Article art = liste_articles.get(position);
 
             Picasso.with(getActivity()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + art.image).into(pic);
             name.setText(art.name);

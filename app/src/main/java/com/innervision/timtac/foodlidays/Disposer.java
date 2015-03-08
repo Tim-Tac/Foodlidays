@@ -32,11 +32,11 @@ public class Disposer extends FragmentActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new FoodCard();
+                    return new FragmentMenu();
                 case 1:
-                    return new Card();
+                    return new FragmentCard();
                 case 2:
-                    return new Settings();
+                    return new FragmentSettings();
             }
             return null;
         }
@@ -47,25 +47,25 @@ public class Disposer extends FragmentActivity {
             return 3;
         }
 
+
         @Override
         public CharSequence getPageTitle(int position) {
             //return "OBJECT " + (position + 1);
             switch (position) {
                 case 0:
-                    return "Menu";
+                    return getString(R.string.menu);
                 case 1:
-                    return "Panier";
+                    return getString(R.string.card);
                 case 2:
-                    return "Paramètres";
+                    return getString(R.string.action_settings);
             }
             return null;
         }
+
 
         @Override
         public int getItemPosition(Object object) {
             return POSITION_NONE;
         }
-
     }
-
 }

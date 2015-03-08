@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.Style;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -31,12 +30,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class MainActivity extends Activity {
 
+    //UI declaration
     private EditText number;
     private EditText email;
     private String semail;
@@ -46,7 +44,7 @@ public class MainActivity extends Activity {
     private String result;
     private String result2;
 
-    // toutes les variables de session
+    // Les variables de session
     public static String session_type;
     public static String session_email;
     public static String session_room;
@@ -81,9 +79,9 @@ public class MainActivity extends Activity {
 
                 if((!semail.matches("")) && !snumber.matches(""))
                 {
-                    if(isEmailValid(semail))
+                    if(UtilitiesFunctions.isEmailValid(semail))
                     {
-                        String url = "http://foodlidays.dev.innervisiongroup.com/api/v1/login";
+                        String url = UtilitiesConfig.url_base + "/api/v1/login";
                         try {
                             new Script().execute(url,snumber,semail).get();
                         } catch (InterruptedException | ExecutionException e) {
@@ -92,7 +90,7 @@ public class MainActivity extends Activity {
 
                         if(result != null)
                         {
-                            if (result.length() < 30)
+                            if (result.length() < 10)
                             {
                                 Toast.makeText(getApplicationContext(), R.string.bad_room_nuber, Toast.LENGTH_LONG).show();
                             }
@@ -141,7 +139,7 @@ public class MainActivity extends Activity {
                                 startActivity(intent);
                             }
                         }
-                        else Toast.makeText(getApplicationContext(),"Pas de connexion internet",Toast.LENGTH_SHORT).show();
+                        else Toast.makeText(getApplicationContext(),R.string.no_connection,Toast.LENGTH_SHORT).show();
                     }
                     else Toast.makeText(getApplicationContext(),R.string.email_invalid,Toast.LENGTH_SHORT).show();
                 }
@@ -180,20 +178,6 @@ public class MainActivity extends Activity {
             }
         }
 
-    private boolean isEmailValid(String email)
-    {
-        String regExpn = "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@((([0-1]?" +
-                "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])" +
-                "\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4]" +
-                "[0-9])){1}|([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
-
-        Pattern pattern;
-        pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
-        Matcher matcher;
-        matcher = pattern.matcher(email);
-
-        return matcher.matches();
-    }
 
     public class Script extends AsyncTask<String, Void, String>
     {

@@ -27,5 +27,6 @@
     <string name="card">Panier</string>
     <string name="menu">Menu</string>
     <string name="any_restaurant">Désolé, nous n\'avons trouvé aucun restaurants ouvert dans votre zone ...</string>
+    <string name="no_connection">Pas de connexion valide</string>
 
 </resources>

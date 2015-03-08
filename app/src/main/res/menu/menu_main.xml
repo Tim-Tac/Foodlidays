@@ -19,7 +19,7 @@
 
     <item
         android:id="@+id/settings"
-        android:title="seetings"
+        android:title="settings"
         android:icon="@drawable/setings"
         android:orderInCategory="100"
         android:showAsAction="ifRoom" />
