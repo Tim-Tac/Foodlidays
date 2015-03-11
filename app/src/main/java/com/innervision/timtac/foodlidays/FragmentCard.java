@@ -18,20 +18,19 @@ import com.squareup.picasso.Picasso;
 import com.innervision.timtac.foodlidays.UtilitiesClass.*;
 import java.util.ArrayList;
 
-
 public class FragmentCard extends Fragment {
 
     public static ArrayList<Order_Article> myOrderArticles = new ArrayList<>();
-    private static ListView orderList;
-    private float Total;
 
-    //UI
-    TextView empty;
-    Button command;
-    TextView order_total;
+    //UI declaration
+    private TextView empty;
+    private Button command;
+    private TextView order_total;
+    private static ListView orderList;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
+
         View v = inflater.inflate(R.layout.activity_card, group, false);
 
         empty = (TextView)v.findViewById(R.id.card_empty);
@@ -39,107 +38,106 @@ public class FragmentCard extends Fragment {
         command = (Button)v.findViewById(R.id.order_button);
         order_total = (TextView)v.findViewById(R.id.order_total);
 
-        if(myOrderArticles.size() == 0)
-        {
-            orderList.setVisibility(View.GONE);
-            command.setVisibility(View.GONE);
-            order_total.setVisibility(View.GONE);
+        if(myOrderArticles.isEmpty()) ShowEmptyCard();
+        else FillCard();
 
-        }
-        else
-        {
-            /*** Si il y a des articles dans le panier ***/
 
-            empty.setVisibility(View.GONE);
+        command.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            CustomArrayAdapter ad = new CustomArrayAdapter();
-            orderList.setAdapter(ad);
-
-            Total = 0;
-            for(int i = 0; i < myOrderArticles.size() ; i++)
-            {
-                Total = Total + (Float.parseFloat(myOrderArticles.get(i).prix)*myOrderArticles.get(i).quantity);
+                MakeCommand();
             }
-            order_total.setText("Total : " + UtilitiesFunctions.round(Total, 3) + " €");
-
-            command.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        });
 
 
-                }
-            });
+        orderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-
-            orderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-                    final Order_Article article = (Order_Article)orderList.getItemAtPosition(position);
-
-                    /******* Dialog pour supprimer l'item ou modifier la quantité *******/
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    LayoutInflater inflater = LayoutInflater.from(getActivity());
-                    View quantity_view = inflater.inflate(R.layout.dialog_quantity, null);
-
-                    final NumberPicker pick = (NumberPicker)quantity_view.findViewById(R.id.numberPicker);
-                    pick.setMaxValue(25);
-                    pick.setMinValue(1);
-                    pick.setValue(article.quantity);
-                    FragmentMenu.setNumberPickerTextColor(pick, 0xff000000);
-
-
-                    builder.setTitle("Quantité " + article.name);
-                    builder.setView(quantity_view);
-
-                    builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //ne rien faire
-                        }
-                    });
-
-                    builder.setPositiveButton("Modifier la quantité", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            article.quantity = pick.getValue();
-                            Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
-                        }
-                    });
-
-                    builder.setNeutralButton("Supprimer l'article", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            myOrderArticles.remove(position);
-                            Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
-                        }
-                    });
-
-
-
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-            });
-
-
-        }
-
+                ShowDialogQuantity(position);
+            }
+        });
 
         return v;
     }
 
+    public void ShowEmptyCard()
+    {
+        orderList.setVisibility(View.GONE);
+        command.setVisibility(View.GONE);
+        order_total.setVisibility(View.GONE);
+    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
+    public void FillCard()
+    {
+        empty.setVisibility(View.GONE);
+
+        AdapterOrderArticleToList ad = new AdapterOrderArticleToList();
+        orderList.setAdapter(ad);
+
+        float Total = 0;
+        for(int i = 0; i < myOrderArticles.size() ; i++)
+        {
+            Total = Total + (Float.parseFloat(myOrderArticles.get(i).prix)*myOrderArticles.get(i).quantity);
+        }
+        order_total.setText("Total : " + UtilitiesFunctions.round(Total, 3) + " €");
+    }
 
 
-
+    public void MakeCommand()
+    {
 
     }
 
 
-    public class CustomArrayAdapter extends BaseAdapter {
+    public void ShowDialogQuantity(int p)
+    {
+        final int position = p;
+        final Order_Article article = (Order_Article)orderList.getItemAtPosition(position);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View quantity_view = inflater.inflate(R.layout.dialog_quantity, null);
+
+        final NumberPicker pick = (NumberPicker)quantity_view.findViewById(R.id.numberPicker);
+        pick.setMaxValue(25);
+        pick.setMinValue(1);
+        pick.setValue(article.quantity);
+        FragmentMenu.setNumberPickerTextColor(pick, 0xff000000);
+
+
+        builder.setTitle("Quantité " + article.name);
+        builder.setView(quantity_view);
+
+        builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //ne rien faire
+            }
+        });
+
+        builder.setPositiveButton("Modifier la quantité", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                article.quantity = pick.getValue();
+                Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+            }
+        });
+
+        builder.setNeutralButton("Supprimer l'article", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                myOrderArticles.remove(position);
+                Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+            }
+        });
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    public class AdapterOrderArticleToList extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -181,27 +179,4 @@ public class FragmentCard extends Fragment {
 
         }
     }
-
-
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                Intent intent = new Intent(getActivity(), Settings.class);
-                startActivity(intent);
-                return true;
-            case R.id.pizza:
-                Intent intent2 = new Intent(getActivity(), FoodCard.class);
-                startActivity(intent2);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
 }

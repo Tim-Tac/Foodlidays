@@ -6,51 +6,22 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 public class FragmentSettings extends Fragment {
 
     //UI declaration
-    TextView identifiant;
-    TextView email;
-    TextView adresse;
-    TextView zip;
-    TextView ville;
-    TextView etage;
-    TextView numero;
-    Button deco;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-
-        identifiant.setText(MainActivity.session_room_number);
-        email.setText(MainActivity.session_email);
-        adresse.setText(MainActivity.session_street_address);
-        zip.setText(MainActivity.session_zip);
-        ville.setText(MainActivity.session_city);
-        etage.setText(MainActivity.session_floor + getString(R.string.nd_floor_room) );
-        numero.setText(MainActivity.session_room);
-
-        deco.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                prefs.edit().clear().apply();
-                Intent intent= new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
+    private TextView identifiant;
+    private TextView email;
+    private TextView adresse;
+    private TextView zip;
+    private TextView ville;
+    private TextView etage;
+    private TextView numero;
+    private Button deco;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
@@ -66,31 +37,40 @@ public class FragmentSettings extends Fragment {
         numero = (TextView)v.findViewById(R.id.numero);
         deco = (Button)v.findViewById(R.id.deco);
 
+        FillFields();
+
+        deco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DeconnectUser();
+            }
+        });
+
         return v;
     }
 
 
-    /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_main, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+    public void FillFields()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        identifiant.setText(prefs.getString("session_room_number",""));
+        email.setText(prefs.getString("session_email",""));
+        adresse.setText(prefs.getString("session_street_address",""));
+        zip.setText(prefs.getString("session_zip",""));
+        ville.setText(prefs.getString("session_city",""));
+        etage.setText(prefs.getString("session_floor","") + getString(R.string.nd_floor_room) );
+        numero.setText(prefs.getString("session_room",""));
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.panier:
-                Intent intent = new Intent(getActivity(), Card.class);
-                startActivity(intent);
-                return true;
-            case R.id.pizza:
-                Intent intent2 = new Intent(getActivity(), FoodCard.class);
-                startActivity(intent2);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
+    public void DeconnectUser()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs.edit().clear().apply();
+        Intent intent= new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+    }
 
 }

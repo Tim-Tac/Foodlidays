@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".Disposer">
 
-    <android.support.v4.view.PagerTitleStrip
-        android:id="@+id/pager_title_strip"
+    <android.support.v4.view.PagerTabStrip
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_gravity="top"
-        android:background="#22CC22"
-        android:textColor="#005500" />
+        android:id="@+id/pager_tabs_strip"
+        android:layout_height="wrap_content"
+        android:background="#222222"
+        android:paddingTop="15dp"/>
 
 </android.support.v4.view.ViewPager>

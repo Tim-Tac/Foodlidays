@@ -31,8 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-
 public class MainActivity extends Activity {
+
+    private String url = UtilitiesConfig.url_base + "/api/v1/login";
 
     //UI declaration
     private EditText number;
@@ -42,20 +43,6 @@ public class MainActivity extends Activity {
 
     // résultats pour les scripts serveur
     private String result;
-    private String result2;
-
-    // Les variables de session
-    public static String session_type;
-    public static String session_email;
-    public static String session_room;
-    public static String session_id;
-    public static String session_user_id;
-    public static String session_room_number;
-    public static String session_floor;
-    public static String session_street_address;
-    public static String session_city;
-    public static String session_zip;
-    public static String session_country;
 
 
     @Override
@@ -64,11 +51,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //récup des widgets
         number = (EditText)findViewById(R.id.number);
         email = (EditText)findViewById(R.id.email);
-        Button connexion= (Button)findViewById(R.id.connexion);
+        Button connexion = (Button)findViewById(R.id.connexion);
         ImageView imageqr = (ImageView)findViewById(R.id.imageqr);
-
 
         connexion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,89 +64,30 @@ public class MainActivity extends Activity {
                 semail = email.getText().toString();
                 snumber = number.getText().toString();
 
-                if((!semail.matches("")) && !snumber.matches(""))
+                if(!UtilitiesFunctions.isNetworkConnected(getApplicationContext()))
                 {
-                    if(UtilitiesFunctions.isEmailValid(semail))
-                    {
-                        String url = UtilitiesConfig.url_base + "/api/v1/login";
-                        try {
-                            new Script().execute(url,snumber,semail).get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
-
-                        if(result != null)
-                        {
-                            if (result.length() < 10)
-                            {
-                                Toast.makeText(getApplicationContext(), R.string.bad_room_nuber, Toast.LENGTH_LONG).show();
-                            }
-                            else
-                            {
-                                try {
-
-                                    JSONObject object = new JSONObject(result);
-                                    session_email = object.getString("email");
-                                    session_type = object.getString("place_type");
-                                    result2 = object.getString("room");
-                                    JSONObject object2 = new JSONObject(result2);
-                                    session_id = object2.getString("id");
-                                    session_room_number = object2.getString("room_number");
-                                    session_floor = object2.getString("floor");
-                                    session_room = object2.getString("room");
-                                    session_user_id = object2.getString("user_id");
-                                    session_street_address = object2.getString("street_address");
-                                    session_city = object2.getString("city");
-                                    session_country = object2.getString("country");
-                                    session_zip = object2.getString("zip");
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    Log.e("log_tag", "error in parsing " + e.toString());
-                                }
-
-                                SuperToast.create(getApplicationContext(),getString(R.string.signed_in),SuperToast.Duration.MEDIUM,Style.getStyle(Style.GREEN, SuperToast.Animations.POPUP)).show();
-
-                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-
-                                prefs.edit().putString("session_email", session_email).apply();
-                                prefs.edit().putString("session_type", session_type).apply();
-                                prefs.edit().putString("session_id", session_id).apply();
-                                prefs.edit().putString("session_room_number", session_room_number).apply();
-                                prefs.edit().putString("session_floor", session_floor).apply();
-                                prefs.edit().putString("session_room", session_room).apply();
-                                prefs.edit().putString("session_user_id", session_user_id).apply();
-                                prefs.edit().putString("session_street_address", session_street_address).apply();
-                                prefs.edit().putString("session_city", session_city).apply();
-                                prefs.edit().putString("session_country", session_country).apply();
-                                prefs.edit().putString("session_zip", session_zip).apply();
-
-
-                                Intent intent = new Intent(MainActivity.this, Disposer.class);
-                                startActivity(intent);
-                            }
-                        }
-                        else Toast.makeText(getApplicationContext(),R.string.no_connection,Toast.LENGTH_SHORT).show();
-                    }
-                    else Toast.makeText(getApplicationContext(),R.string.email_invalid,Toast.LENGTH_SHORT).show();
+                    UtilitiesFunctions.DisplayError(getString(R.string.connect_to_internet), MainActivity.this);
+                    return;
                 }
-                else SuperToast.create(getApplicationContext(), getString(R.string.need_two_field), SuperToast.Duration.MEDIUM, Style.getStyle(Style.RED,SuperToast.Animations.FLYIN)).show();
+
+                ConnectUser(semail,snumber);
             }
         });
+
 
         imageqr.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v) {
-
                 IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
                 integrator.setResultDisplayDuration(0);
                 integrator.setCameraId(0);
-                integrator.setPrompt(" ");
+                integrator.setPrompt("");
                 integrator.initiateScan();
             }
         });
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -168,25 +96,13 @@ public class MainActivity extends Activity {
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
-            if (result != null)
-            {
-                number.setText(result.getContents());
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(),R.string.qr_code_failed,Toast.LENGTH_SHORT).show();
-            }
-        }
+        if (result != null) number.setText(result.getContents());
+        else Toast.makeText(getApplicationContext(),R.string.qr_code_failed,Toast.LENGTH_SHORT).show();
+    }
 
 
-    public class Script extends AsyncTask<String, Void, String>
+    public class RequestToConnect extends AsyncTask<String, Void, String>
     {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
         @Override
         protected String doInBackground(String... params) {
 
@@ -194,16 +110,13 @@ public class MainActivity extends Activity {
 
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpPost request = new HttpPost(params[0]);
-
                 List<NameValuePair> nameValuePairs = new ArrayList<>(3);
                 nameValuePairs.add(new BasicNameValuePair("room_number", params[1]));
                 nameValuePairs.add(new BasicNameValuePair("email", params[2]));
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 HttpResponse response = httpclient.execute(request);
-
-                BufferedReader in = new BufferedReader
-                        (new InputStreamReader(response.getEntity().getContent()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 result = in.readLine();
                 in.close();
 
@@ -212,11 +125,95 @@ public class MainActivity extends Activity {
             }
             return result;
         }
-
-        @Override
-        protected void onPostExecute(String ligne){
-        }
-
     }
 
+
+    public void ConnectUser(String semail, String snumber)
+    {
+
+        /*** validations des inputs *******************************************************/
+
+        //si un champs vide
+        if(!UtilitiesFunctions.AnyEmpty(semail,snumber))
+        {
+            UtilitiesFunctions.DisplayError(getString(R.string.need_two_field), MainActivity.this);
+            return;
+        }
+
+        //si email pas valide
+        if(!UtilitiesFunctions.isEmailValid(semail))
+        {
+            UtilitiesFunctions.DisplayError(getString(R.string.email_invalid), MainActivity.this);
+            return;
+        }
+
+
+        /*** Tentative de connection ******************************************************/
+
+        try {
+            new RequestToConnect().execute(url, snumber, semail).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+        /*** Validation de la réponse *****************************************************/
+
+        //si pas de réponse
+        if(result == null)
+        {
+            UtilitiesFunctions.DisplayError(getString(R.string.no_connection), MainActivity.this);
+            return;
+        }
+
+        //si mauvais résultat
+        if(result.length() < 30)
+        {
+            UtilitiesFunctions.DisplayError(getString(R.string.bad_room_nuber), MainActivity.this);
+            return;
+        }
+
+
+        /*** Récupération des infos et connection *****************************************/
+
+        try {
+
+            JSONObject object = new JSONObject(result);
+            JSONObject object2 = object.getJSONObject("room");
+
+            //si l'objet ne contient pas ce que l'on attend
+            if (!object.has("email"))
+            {
+                UtilitiesFunctions.DisplayError(getString(R.string.bad_room_nuber), MainActivity.this);
+                return;
+            }
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+            prefs.edit().putString("session_email", object.getString("email")).apply();
+            prefs.edit().putString("session_type", object.getString("place_type")).apply();
+            prefs.edit().putString("session_id", object2.getString("id")).apply();
+            prefs.edit().putString("session_room_number", object2.getString("room_number")).apply();
+            prefs.edit().putString("session_floor", object2.getString("floor")).apply();
+            prefs.edit().putString("session_room", object2.getString("room")).apply();
+            prefs.edit().putString("session_user_id", object2.getString("user_id")).apply();
+            prefs.edit().putString("session_street_address", object2.getString("street_address")).apply();
+            prefs.edit().putString("session_city", object2.getString("city")).apply();
+            prefs.edit().putString("session_country", object2.getString("country")).apply();
+            prefs.edit().putString("session_zip", object2.getString("zip")).apply();
+            prefs.edit().putBoolean("logged",true).apply();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("log_tag", "error in parsing " + e.toString());
+        }
+
+        SuperToast.create(getApplicationContext(),getString(R.string.signed_in),SuperToast.Duration.MEDIUM,Style.getStyle(Style.GREEN, SuperToast.Animations.POPUP)).show();
+
+        Intent intent = new Intent(MainActivity.this, Disposer.class);
+        startActivity(intent);
+
+
+
+    }
 }
