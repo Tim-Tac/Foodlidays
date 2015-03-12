@@ -105,7 +105,7 @@ public class FragmentCard extends Fragment {
         pick.setMaxValue(25);
         pick.setMinValue(1);
         pick.setValue(article.quantity);
-        FragmentMenu.setNumberPickerTextColor(pick, 0xff000000);
+        UtilitiesFunctions.setNumberPickerTextColor(pick, 0xff000000);
 
 
         builder.setTitle("Quantité " + article.name);

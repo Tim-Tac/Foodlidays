@@ -1,16 +1,11 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.net.ConnectivityManager;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +13,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.squareup.picasso.Picasso;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -35,22 +29,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.innervision.timtac.foodlidays.UtilitiesClass.*;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+
 
 public class FragmentMenu extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public static String result = "";
     public static String result_cat = "";
 
+    //UI delcaration
     public static Spinner spinner;
     public static ListView myList;
     public static TextView any_restaurants;
 
+    //result from request to server
     public static JSONArray jArray_articles = new JSONArray();
     public static JSONArray jArray_cat = new JSONArray();
 
@@ -59,7 +54,57 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     public static ArrayList<Article> liste_articles = new ArrayList<>();
 
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        // Si pas de réseau
+        if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext()))
+        {
+            DisplayText(getString(R.string.no_connection));
+        }
+
+        //récupère toutes les catégories
+        RetrieveCat();
+    }
+
+
+    public void RetrieveCat()
+    {
+        String url_cat = UtilitiesConfig.url_base + "/api/v1/category";
+
+        try {
+
+            result_cat = new GetRequest().execute(url_cat).get();
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+        if (result_cat != null)
+        {
+            try {
+
+                jArray_cat = new JSONArray(result_cat);
+
+                for (int i = 0; i < jArray_cat.length(); i++) {
+
+                    JSONObject jsonObject = jArray_cat.getJSONObject(i);
+                    all_cat.add(jsonObject.getString("name"));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
+    {
+
         View v = inflater.inflate(R.layout.activity_food_card, group, false);
 
         myList = (ListView) v.findViewById(R.id.list);
@@ -68,113 +113,27 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
         spinner.setOnItemSelectedListener(this);
 
-
-
-
-
-        if(UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext()))
+        // Si pas de réseau
+        if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext()))
         {
+            return v;
+        }
 
-            //*************************** Récupération des catégories ******************************
-
-            String url_cat = UtilitiesConfig.url_base + "/api/v1/category";
-            try {
-
-                result_cat = new GetRequest().execute(url_cat).get();
-
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
-
-            if (result_cat != null)
-            {
-                try {
-
-                    jArray_cat = new JSONArray(result_cat);
-
-                    for (int i = 0; i < jArray_cat.length(); i++) {
-
-                        JSONObject jsonObject = jArray_cat.getJSONObject(i);
-                        all_cat.add(jsonObject.getString("name"));
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
-
-
-
-            //********************* Création de la liste des catégories disponibles ****************
-
-            String zip_code_temp = "1435";
-            String url = UtilitiesConfig.url_base + "/api/v1/food/cat/all/" + zip_code_temp;
-
-            try {
-                result = new GetRequest().execute(url).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
-            if (result != null)
-            {
-                if(result.length() > 70)
-                {
-
-                    try {
-
-                        jArray_articles = new JSONArray(result);
-
-                        for (int i = 0; i < jArray_articles.length(); i++) {
-                            JSONObject jsonObject = jArray_articles.getJSONObject(i);
-
-                            int n_cat = jsonObject.getInt("category_id");
-
-                            for(int j = 0;j<jArray_cat.length();j++)
-                            {
-                                JSONObject jObj = jArray_cat.getJSONObject(j);
-
-                                if(n_cat == jObj.getInt("id"))
-                                {
-                                    if(!cat.contains(jObj.getString("name")))
-                                        cat.add(jObj.getString("name"));
-                                }
-                            }
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cat);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(adapter);
-
-                } else any_restaurants.setVisibility(View.VISIBLE);
-
-            } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
-
-        } else Toast.makeText(getActivity(), "Pas de connexion internet valide", Toast.LENGTH_LONG).show();
-
+        //rempli le spinner des catégories existantes
+        FillExistingCat();
 
         return v;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-    }
-
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+    {
 
        String item = parent.getItemAtPosition(pos).toString();
        int index = 0;
 
-        /*** on récupère l'id de la catégorie ***/
+        //*** on récupère l'id de la catégorie **
        for(int i=0;i<jArray_cat.length();i++)
        {
            try {
@@ -194,7 +153,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
         liste_articles.clear();
 
 
-        /*** on liste les articles de la catégorie ***/
+        //*** on liste les articles de la catégorie ***
         for(int i=0;i<jArray_articles.length();i++)
         {
             try {
@@ -217,7 +176,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
             }
         }
 
-        CustomArrayAdapter ad = new CustomArrayAdapter();
+        AdapterArticleToList ad = new AdapterArticleToList();
         myList.setAdapter(ad);
 
 
@@ -228,7 +187,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
                 final Article article = (Article)myList.getItemAtPosition(position);
 
 
-                /********************* on lance un dialog pour commander ***************************/
+                //********************* on lance un dialog pour commander ***************************
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
                 View dialog_view = inflater.inflate(R.layout.dialog_article, null);
@@ -239,7 +198,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
                 final NumberPicker pick = (NumberPicker)dialog_view.findViewById(R.id.numberPicker);
                 pick.setMaxValue(25);
                 pick.setMinValue(1);
-                setNumberPickerTextColor(pick,0xff000000);
+                UtilitiesFunctions.setNumberPickerTextColor(pick, 0xff000000);
 
                 builder.setTitle(article.name);
                 builder.setView(dialog_view);
@@ -291,7 +250,14 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     }
 
 
-    public class CustomArrayAdapter extends BaseAdapter{
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+        // Another interface callback
+    }
+
+
+    public class AdapterArticleToList extends BaseAdapter
+    {
 
         @Override
         public int getCount() {
@@ -332,51 +298,18 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     }
 
 
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-    }
-
-
-    public static boolean setNumberPickerTextColor(NumberPicker numberPicker, int color)
+    public class GetRequest extends AsyncTask<String, String, String>
     {
-        final int count = numberPicker.getChildCount();
-        for(int i = 0; i < count; i++){
-            View child = numberPicker.getChildAt(i);
-            if(child instanceof EditText){
-                try{
-                    Field selectorWheelPaintField = numberPicker.getClass()
-                            .getDeclaredField("mSelectorWheelPaint");
-                    selectorWheelPaintField.setAccessible(true);
-                    ((Paint)selectorWheelPaintField.get(numberPicker)).setColor(color);
-                    ((EditText)child).setTextColor(color);
-                    numberPicker.invalidate();
-                    return true;
-                }
-                catch(NoSuchFieldException | IllegalAccessException | IllegalArgumentException e){
-                    Log.w("setNumberPickerError", e);
-                }
-            }
-        }
-        return false;
-    }
-
-
-    public class GetRequest extends AsyncTask<String, String, String> {
         private String result;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         @Override
         protected String doInBackground(String... params) {
             try{
+
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpGet request = new HttpGet(params[0]);
                 HttpResponse response = httpclient.execute(request);
-                BufferedReader in = new BufferedReader
-                        (new InputStreamReader(response.getEntity().getContent()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 result = in.readLine();
                 in.close();
 
@@ -390,10 +323,70 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
         protected void onPostExecute(String ligne)
         {
             super.onPostExecute(ligne);
+        }
+    }
 
+
+    public void DisplayText(String s)
+    {
+        SuperToast toast = new SuperToast(getActivity());
+        toast.setTextColor(Color.WHITE);
+        toast.setBackground(SuperToast.Background.RED);
+        toast.setDuration(SuperToast.Duration.LONG);
+        toast.setAnimations(SuperToast.Animations.FLYIN);
+        toast.setText(s);
+        toast.show();
+    }
+
+
+    public void FillExistingCat()
+    {
+        String zip_code_temp = "1435";
+        String url = UtilitiesConfig.url_base + "/api/v1/food/cat/all/" + zip_code_temp;
+
+        try {
+            result = new GetRequest().execute(url).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
 
+        if (result != null)
+        {
+            if(result.length() > 70)
+            {
 
+                try {
+
+                    jArray_articles = new JSONArray(result);
+
+                    for (int i = 0; i < jArray_articles.length(); i++) {
+                        JSONObject jsonObject = jArray_articles.getJSONObject(i);
+
+                        int n_cat = jsonObject.getInt("category_id");
+
+                        for(int j = 0;j<jArray_cat.length();j++)
+                        {
+                            JSONObject jObj = jArray_cat.getJSONObject(j);
+
+                            if(n_cat == jObj.getInt("id"))
+                            {
+                                if(!cat.contains(jObj.getString("name")))
+                                    cat.add(jObj.getString("name"));
+                            }
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cat);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
+            } else any_restaurants.setVisibility(View.VISIBLE);
+
+        } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
     }
 
 }

@@ -29,5 +29,6 @@
     <string name="any_restaurant">Désolé, nous n\'avons trouvé aucun restaurants ouvert dans votre zone ...</string>
     <string name="no_connection">Pas de connexion valide</string>
     <string name="connect_to_internet">Une connexion internet est nécéssaire</string>
+    <string name="profil">Profile</string>
 
 </resources>
