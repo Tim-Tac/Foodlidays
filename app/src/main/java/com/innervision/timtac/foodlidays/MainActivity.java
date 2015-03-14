@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends Activity {
 
-    private String url = UtilitiesConfig.url_base + "/api/v1/login";
+    private String url = UtilitiesConfig.url_base + UtilitiesConfig.URL_LOGIN;
 
     //UI declaration
     private EditText number;
@@ -213,12 +213,12 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(MainActivity.this, Disposer.class);
         startActivity(intent);
 
-
-
     }
+
 
     public static Boolean AnyEmpty(String s1, String s2)
     {
         return !s1.isEmpty() && !s2.isEmpty();
     }
+
 }

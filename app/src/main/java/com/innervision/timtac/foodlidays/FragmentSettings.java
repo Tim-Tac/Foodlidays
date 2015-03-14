@@ -24,8 +24,8 @@ public class FragmentSettings extends Fragment {
     private Button deco;
 
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
+    {
         View v = inflater.inflate(R.layout.activity_settings, group, false);
 
         identifiant = (TextView)v.findViewById(R.id.indentifiant);

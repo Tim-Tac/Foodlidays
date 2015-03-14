@@ -32,7 +32,6 @@ import com.innervision.timtac.foodlidays.UtilitiesClass.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
 public class FragmentMenu extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -53,6 +52,15 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     public static ArrayList<String> cat = new ArrayList<>();
     public static ArrayList<Article> liste_articles = new ArrayList<>();
 
+    private String url_cat = UtilitiesConfig.url_base + UtilitiesConfig.URL_CAT;
+    String zip_code_temp = "1435";
+    private String url = UtilitiesConfig.url_base + UtilitiesConfig.URL_CAT_ZIPCODE + zip_code_temp;
+
+
+    /**
+    Récupère toutes les catégories pésentes sur le serveur, une seule fois au lacement de l'app
+     **/
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -60,29 +68,52 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
         super.onCreate(savedInstanceState);
 
         // Si pas de réseau
-        if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext()))
-        {
-            DisplayText(getString(R.string.no_connection));
-        }
+        if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext())) DisplayText(getString(R.string.no_connection));
 
-        //récupère toutes les catégories
+        //récupère toutes les catégories au lancement
         RetrieveCat();
     }
 
 
     public void RetrieveCat()
     {
-        String url_cat = UtilitiesConfig.url_base + "/api/v1/category";
 
-        try {
+        new GetCatFromServer().execute(url_cat);
+    }
 
-            result_cat = new GetRequest().execute(url_cat).get();
 
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+    public class GetCatFromServer extends AsyncTask<String, String, String>
+    {
+        @Override
+        protected String doInBackground(String... params) {
+            String res = null;
+            try{
+
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpGet request = new HttpGet(url_cat);
+                HttpResponse response = httpclient.execute(request);
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                res = in.readLine();
+                in.close();
+
+            }catch(Exception e){
+                Log.e("log_tag", "Error in http connection " + e.toString());
+            }
+            return res;
         }
 
+        @Override
+        protected void onPostExecute(String ligne)
+        {
+            super.onPostExecute(ligne);
+            result_cat = ligne;
+            FillCat();
+        }
+    }
 
+
+    public void FillCat()
+    {
         if (result_cat != null)
         {
             try {
@@ -102,9 +133,15 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     }
 
 
+
+
+    /**
+    Récupère les catégories disponibles dans la région de l'utilisateur
+     **/
+
+
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
     {
-
         View v = inflater.inflate(R.layout.activity_food_card, group, false);
 
         myList = (ListView) v.findViewById(R.id.list);
@@ -114,16 +151,99 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
         spinner.setOnItemSelectedListener(this);
 
         // Si pas de réseau
-        if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext()))
-        {
-            return v;
-        }
+        if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext())) return v;
 
         //rempli le spinner des catégories existantes
-        FillExistingCat();
+        RetrieveExistingCat();
 
         return v;
     }
+
+
+    public void RetrieveExistingCat()
+    {
+
+        new GetExistingCatFromServer().execute();
+    }
+
+
+    public class GetExistingCatFromServer extends AsyncTask<String, String, String>
+    {
+        @Override
+        protected String doInBackground(String... params) {
+            String res = null;
+
+            try{
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpGet request = new HttpGet(url);
+                HttpResponse response = httpclient.execute(request);
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                res = in.readLine();
+                in.close();
+
+            }catch(Exception e){
+                Log.e("log_tag", "Error in http connection " + e.toString());
+            }
+            return res;
+        }
+
+        @Override
+        protected void onPostExecute(String ligne)
+        {
+            super.onPostExecute(ligne);
+            result = ligne;
+            FillExistingCat();
+        }
+    }
+
+
+    public void FillExistingCat()
+    {
+        if (result != null)
+        {
+            if(result.length() > 70)
+            {
+
+                try {
+
+                    jArray_articles = new JSONArray(result);
+
+                    for (int i = 0; i < jArray_articles.length(); i++) {
+                        JSONObject jsonObject = jArray_articles.getJSONObject(i);
+
+                        int n_cat = jsonObject.getInt("category_id");
+
+                        for(int j = 0;j<jArray_cat.length();j++)
+                        {
+                            JSONObject jObj = jArray_cat.getJSONObject(j);
+
+                            if(n_cat == jObj.getInt("id"))
+                            {
+                                if(!cat.contains(jObj.getString("name")))
+                                    cat.add(jObj.getString("name"));
+                            }
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cat);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
+            } else any_restaurants.setVisibility(View.VISIBLE);
+
+        } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
+    }
+
+
+
+
+    /**
+    Sur base de la catégorie choisie, établi une liste des articles de cette catégorie
+     **/
 
 
     @Override
@@ -252,7 +372,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
     public void onNothingSelected(AdapterView<?> parent)
     {
-        // Another interface callback
+        // nothing to do
     }
 
 
@@ -287,42 +407,13 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
             Article art = liste_articles.get(position);
 
-            Picasso.with(getActivity()).load("http://foodlidays.dev.innervisiongroup.com/uploads/" + art.image).into(pic);
+            Picasso.with(getActivity()).load(UtilitiesConfig.url_base + "/uploads/" + art.image).into(pic);
             name.setText(art.name);
             descr.setText(art.detail);
             prix.setText(art.prix + " €");
 
             return convertView;
 
-        }
-    }
-
-
-    public class GetRequest extends AsyncTask<String, String, String>
-    {
-        private String result;
-
-        @Override
-        protected String doInBackground(String... params) {
-            try{
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpGet request = new HttpGet(params[0]);
-                HttpResponse response = httpclient.execute(request);
-                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-                result = in.readLine();
-                in.close();
-
-            }catch(Exception e){
-                Log.e("log_tag", "Error in http connection " + e.toString());
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String ligne)
-        {
-            super.onPostExecute(ligne);
         }
     }
 
@@ -336,57 +427,6 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
         toast.setAnimations(SuperToast.Animations.FLYIN);
         toast.setText(s);
         toast.show();
-    }
-
-
-    public void FillExistingCat()
-    {
-        String zip_code_temp = "1435";
-        String url = UtilitiesConfig.url_base + "/api/v1/food/cat/all/" + zip_code_temp;
-
-        try {
-            result = new GetRequest().execute(url).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        if (result != null)
-        {
-            if(result.length() > 70)
-            {
-
-                try {
-
-                    jArray_articles = new JSONArray(result);
-
-                    for (int i = 0; i < jArray_articles.length(); i++) {
-                        JSONObject jsonObject = jArray_articles.getJSONObject(i);
-
-                        int n_cat = jsonObject.getInt("category_id");
-
-                        for(int j = 0;j<jArray_cat.length();j++)
-                        {
-                            JSONObject jObj = jArray_cat.getJSONObject(j);
-
-                            if(n_cat == jObj.getInt("id"))
-                            {
-                                if(!cat.contains(jObj.getString("name")))
-                                    cat.add(jObj.getString("name"));
-                            }
-                        }
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cat);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-
-            } else any_restaurants.setVisibility(View.VISIBLE);
-
-        } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
     }
 
 }

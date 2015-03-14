@@ -62,6 +62,7 @@ public class FragmentCard extends Fragment {
         return v;
     }
 
+
     public void ShowEmptyCard()
     {
         orderList.setVisibility(View.GONE);

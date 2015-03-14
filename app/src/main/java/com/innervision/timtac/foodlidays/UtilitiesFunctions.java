@@ -4,12 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -25,7 +21,8 @@ import java.util.regex.Pattern;
 
 public class UtilitiesFunctions extends Activity{
 
-    public static float round(float d, int decimalPlace) {
+    public static float round(float d, int decimalPlace)
+    {
         BigDecimal bd = new BigDecimal(Float.toString(d));
         bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
         return bd.floatValue();
@@ -46,7 +43,8 @@ public class UtilitiesFunctions extends Activity{
         return matcher.matches();
     }
 
-    public static boolean isNetworkConnected(Context c) {
+    public static boolean isNetworkConnected(Context c)
+    {
         ConnectivityManager conManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conManager.getActiveNetworkInfo();
         return ( netInfo != null && netInfo.isConnected() );
@@ -86,7 +84,5 @@ public class UtilitiesFunctions extends Activity{
         }
         return false;
     }
-
-
 
 }
