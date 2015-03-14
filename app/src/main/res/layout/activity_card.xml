@@ -102,6 +102,8 @@
         android:layout_height="wrap_content"
         android:paddingRight="20dp"
         android:paddingLeft="20dp"
+        android:textColor="#DDDDDD"
+        android:background="@drawable/button_bg"
         android:text="Passer la commande"
         android:id="@+id/order_button"
         android:layout_alignParentBottom="true"

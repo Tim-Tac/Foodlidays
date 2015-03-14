@@ -8,6 +8,7 @@ public class UtilitiesClass {
         int quantity;
         String image;
         String prix;
+        int id;
     }
 
     public static class Article
@@ -16,6 +17,15 @@ public class UtilitiesClass {
         String detail;
         String prix;
         String image;
+        int id;
+    }
+
+    public static class Order
+    {
+        int id;
+        String recap;
+        String status;
+        String time;
     }
 
 }

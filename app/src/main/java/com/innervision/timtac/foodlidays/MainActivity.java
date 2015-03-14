@@ -134,7 +134,7 @@ public class MainActivity extends Activity {
         /*** validations des inputs *******************************************************/
 
         //si un champs vide
-        if(AnyEmpty(semail,snumber))
+        if(!AnyEmpty(semail,snumber))
         {
             UtilitiesFunctions.DisplayError(getString(R.string.need_two_field), MainActivity.this);
             return;

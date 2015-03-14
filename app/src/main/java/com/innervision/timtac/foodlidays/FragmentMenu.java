@@ -36,13 +36,14 @@ import java.util.ArrayList;
 
 public class FragmentMenu extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    public static String result = "";
-    public static String result_cat = "";
+    private static String result = "";
+    private static String result_cat = "";
+    private int spinner_selected = 0;
 
     //UI delcaration
-    public static Spinner spinner;
-    public static ListView myList;
-    public static TextView any_restaurants;
+    private static Spinner spinner;
+    private static ListView myList;
+    private static TextView any_restaurants;
 
     //result from request to server
     public static JSONArray jArray_articles = new JSONArray();
@@ -142,7 +143,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
     {
-        View v = inflater.inflate(R.layout.activity_food_card, group, false);
+        View v = inflater.inflate(R.layout.activity_menu, group, false);
 
         myList = (ListView) v.findViewById(R.id.list);
         any_restaurants = (TextView) v.findViewById(R.id.any_restaurant);
@@ -232,6 +233,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, cat);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
+                spinner.setSelection(spinner_selected);
 
             } else any_restaurants.setVisibility(View.VISIBLE);
 
@@ -251,7 +253,8 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     {
 
        String item = parent.getItemAtPosition(pos).toString();
-       int index = 0;
+       int id_cat = 0;
+       final int selected = pos;
 
         //*** on récupère l'id de la catégorie **
        for(int i=0;i<jArray_cat.length();i++)
@@ -261,7 +264,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
                if(jObj.getString("name").equals(item))
                {
-                   index = jObj.getInt("id");
+                   id_cat = jObj.getInt("id");
                }
 
            } catch (JSONException e) {
@@ -280,13 +283,14 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
                 JSONObject js = jArray_articles.getJSONObject(i);
 
-                if(index == js.getInt("category_id"))
+                if(id_cat == js.getInt("category_id"))
                 {
                     Article myArt = new Article();
                     myArt.name = js.getString("name");
                     myArt.detail = js.getString("note");
                     myArt.prix = js.getString("price");
                     myArt.image = js.getString("image");
+                    myArt.id = js.getInt("id");
 
                     liste_articles.add(myArt);
                 }
@@ -302,7 +306,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 final Article article = (Article)myList.getItemAtPosition(position);
 
@@ -345,18 +349,19 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
                             order.quantity = pick.getValue();
                             order.image = article.image;
                             order.prix = article.prix;
+                            order.id = article.id;
                             FragmentCard.myOrderArticles.add(order);
                         }
 
                         Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
-
-                        Toast.makeText(getActivity(),"article ajouté au panier !",Toast.LENGTH_LONG).show();
+                        spinner_selected = selected;
+                        Toast.makeText(getActivity(),article.name + " ajouté au panier !",Toast.LENGTH_LONG).show();
                     }
                 });
 
                 builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        //nothing to do
                     }
                 });
 

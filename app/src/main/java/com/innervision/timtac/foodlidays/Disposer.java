@@ -35,6 +35,7 @@ public class Disposer extends FragmentActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
     }
 
 
@@ -52,7 +53,7 @@ public class Disposer extends FragmentActivity {
                 case 1:
                     return new FragmentCard();
                 case 2:
-                    return new FragmentSettings();
+                    return new FragmentProfil();
             }
             return null;
         }

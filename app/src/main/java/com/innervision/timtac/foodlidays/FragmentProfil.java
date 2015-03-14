@@ -11,7 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class FragmentSettings extends Fragment {
+import java.util.ArrayList;
+
+public class FragmentProfil extends Fragment {
+
+    private ArrayList<UtilitiesClass.Order> myOrders = new ArrayList<>();
 
     //UI declaration
     private TextView identifiant;
@@ -22,11 +26,12 @@ public class FragmentSettings extends Fragment {
     private TextView etage;
     private TextView numero;
     private Button deco;
+    private TextView any_order;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
     {
-        View v = inflater.inflate(R.layout.activity_settings, group, false);
+        View v = inflater.inflate(R.layout.activity_profil, group, false);
 
         identifiant = (TextView)v.findViewById(R.id.indentifiant);
         email = (TextView)v.findViewById(R.id.email);
@@ -36,8 +41,11 @@ public class FragmentSettings extends Fragment {
         etage = (TextView)v.findViewById(R.id.etage);
         numero = (TextView)v.findViewById(R.id.numero);
         deco = (Button)v.findViewById(R.id.deco);
+        any_order = (TextView)v.findViewById(R.id.any_command);
 
         FillFields();
+
+        if(myOrders.isEmpty()) any_order.setVisibility(View.VISIBLE);
 
         deco.setOnClickListener(new View.OnClickListener() {
             @Override

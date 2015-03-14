@@ -7,111 +7,111 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="55dp"
-        android:src="@drawable/truelogofull"
-        android:contentDescription="@string/app_name"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"/>
-
-   <EditText
-        android:id="@+id/number"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/edit_text_login"
-        android:gravity="center"
-        android:ellipsize="start"
-        android:alpha="0.7"
-        android:layout_marginTop="20dp"
-        android:textSize="17sp"
-        android:hint="@string/request_room"
-        android:textColorHint="#FFFFFF"
-        android:textColor="#FFFFFF"
-        android:textColorHighlight="#FF0000"
-        android:singleLine="true" />
-
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/or_use_qr"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"/>
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <ImageView
-        android:id="@+id/imageqr"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:contentDescription="@string/qr_code"
-        android:src="@drawable/qr"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"/>
-
-
-    <EditText
-        android:id="@+id/email"
-        android:inputType="textEmailAddress"
-        android:layout_width="250dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="50dp"
-        android:background="@drawable/edit_text_login"
-        android:ellipsize="start"
-        android:gravity="center"
-        android:alpha="0.7"
-        android:textSize="17sp"
-        android:layout_marginTop="25dp"
-        android:hint="@string/request_email"
-        android:textColorHint="#FFFFFF"
-        android:textColor="#FFFFFF"
-        android:singleLine="true" />
-
-    <LinearLayout
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="25dp"
-        android:id="@+id/card_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"/>
-
-    <RelativeLayout
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="25dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/connexion"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sign"
-            android:paddingLeft="60dp"
-            android:paddingRight="60dp"
-            android:background="@drawable/button_bg"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:alpha="0.8"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"/>
+            android:orientation="vertical">
 
-        </RelativeLayout>
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="55dp"
+                android:src="@drawable/truelogofull"
+                android:contentDescription="@string/app_name"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"/>
 
-</LinearLayout>
+           <EditText
+                android:id="@+id/number"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/edit_text_login"
+                android:gravity="center"
+                android:ellipsize="start"
+                android:alpha="0.7"
+                android:layout_marginTop="20dp"
+                android:textSize="17sp"
+                android:hint="@string/request_room"
+                android:textColorHint="#FFFFFF"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FF0000"
+                android:singleLine="true" />
 
-</ScrollView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/or_use_qr"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:id="@+id/imageqr"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:contentDescription="@string/qr_code"
+                android:src="@drawable/qr"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center_horizontal"/>
+
+
+            <EditText
+                android:id="@+id/email"
+                android:inputType="textEmailAddress"
+                android:layout_width="250dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="50dp"
+                android:background="@drawable/edit_text_login"
+                android:ellipsize="start"
+                android:gravity="center"
+                android:alpha="0.7"
+                android:textSize="17sp"
+                android:layout_marginTop="25dp"
+                android:hint="@string/request_email"
+                android:textColorHint="#FFFFFF"
+                android:textColor="#FFFFFF"
+                android:singleLine="true" />
+
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="25dp"
+                android:id="@+id/card_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"/>
+
+            <RelativeLayout
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/connexion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign"
+                    android:paddingLeft="60dp"
+                    android:paddingRight="60dp"
+                    android:background="@drawable/button_bg"
+                    android:textSize="18sp"
+                    android:textColor="#FFFFFF"
+                    android:alpha="0.8"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
