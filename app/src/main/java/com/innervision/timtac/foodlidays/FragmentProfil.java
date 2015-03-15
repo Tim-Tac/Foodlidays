@@ -8,14 +8,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class FragmentProfil extends Fragment {
 
-    private ArrayList<UtilitiesClass.Order> myOrders = new ArrayList<>();
+    public static ArrayList<UtilitiesClass.Order> myOrders = new ArrayList<>();
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
     //UI declaration
     private TextView identifiant;
@@ -27,6 +33,9 @@ public class FragmentProfil extends Fragment {
     private TextView numero;
     private Button deco;
     private TextView any_order;
+    private TextView title_command;
+    private LinearLayout info_command;
+    private ListView list_command;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
@@ -42,10 +51,21 @@ public class FragmentProfil extends Fragment {
         numero = (TextView)v.findViewById(R.id.numero);
         deco = (Button)v.findViewById(R.id.deco);
         any_order = (TextView)v.findViewById(R.id.any_command);
+        title_command = (TextView)v.findViewById(R.id.display_command);
+        info_command = (LinearLayout)v.findViewById(R.id.info_command);
+        list_command = (ListView)v.findViewById(R.id.list_command);
 
         FillFields();
 
-        if(myOrders.isEmpty()) any_order.setVisibility(View.VISIBLE);
+        if(myOrders.isEmpty())
+        {
+            ShowEmptyCommand();
+            return v;
+        }
+
+        AdapterOrderToList ad = new AdapterOrderToList();
+        list_command.setAdapter(ad);
+
 
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,14 +75,36 @@ public class FragmentProfil extends Fragment {
             }
         });
 
+
+        list_command.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ShowResume();
+            }
+        });
+
         return v;
+    }
+
+
+    public void ShowResume()
+    {
+        Toast.makeText(getActivity(),"ok",Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void ShowEmptyCommand()
+    {
+        list_command.setVisibility(View.GONE);
+        info_command.setVisibility(View.GONE);
+        title_command.setVisibility(View.GONE);
+        any_order.setVisibility(View.VISIBLE);
     }
 
 
     public void FillFields()
     {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
         identifiant.setText(prefs.getString("session_room_number",""));
         email.setText(prefs.getString("session_email",""));
         adresse.setText(prefs.getString("session_street_address",""));
@@ -75,10 +117,47 @@ public class FragmentProfil extends Fragment {
 
     public void DeconnectUser()
     {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.edit().clear().apply();
         Intent intent= new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
     }
 
+
+    public class AdapterOrderToList extends BaseAdapter
+    {
+        @Override
+        public int getCount() {
+            return myOrders.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return myOrders.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            convertView = inflater.inflate(R.layout.list_command,parent,false);
+
+            TextView command_id = (TextView)convertView.findViewById(R.id.command_id);
+            TextView command_status = (TextView)convertView.findViewById(R.id.command_status);
+            TextView command_time = (TextView)convertView.findViewById(R.id.command_time);
+
+            final UtilitiesClass.Order ord = myOrders.get(position);
+
+            command_id.setText(String.valueOf(ord.id));
+            command_time.setText(ord.time);
+            command_status.setText(ord.status);
+
+            return convertView;
+
+        }
+    }
 }

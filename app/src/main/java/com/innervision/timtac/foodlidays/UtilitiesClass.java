@@ -26,6 +26,8 @@ public class UtilitiesClass {
         String recap;
         String status;
         String time;
+        String method_payement;
+        String prix;
     }
 
 }

@@ -403,7 +403,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.detail_list,parent,false);
+            convertView = inflater.inflate(R.layout.list_detail,parent,false);
 
             TextView name = (TextView)convertView.findViewById(R.id.titre);
             TextView descr = (TextView)convertView.findViewById(R.id.description);

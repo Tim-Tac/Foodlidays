@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FragmentCard extends Fragment {
 
@@ -70,7 +72,7 @@ public class FragmentCard extends Fragment {
             @Override
             public void onClick(View v) {
 
-                MakeCommand();
+                ShowDialogPayement();
             }
         });
 
@@ -111,7 +113,7 @@ public class FragmentCard extends Fragment {
     }
 
 
-    public void ConstructCommand()
+    public void ConstructCommand(Boolean cash)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -127,6 +129,10 @@ public class FragmentCard extends Fragment {
         String id_user = prefs.getString("session_user_id","");
         String floor = prefs.getString("session_floor","");
         String room = prefs.getString("session_room","");
+        String method;
+        if(cash) method = "cash";
+        else method = "card";
+        String language = Locale.getDefault().getLanguage();
 
         JSONArray food = new JSONArray();
         for(Order_Article a : myOrderArticles)
@@ -155,6 +161,8 @@ public class FragmentCard extends Fragment {
             order.put("floor", floor);
             order.put("room", room);
             order.put("plats", food);
+            order.put("language",language);
+            order.put("method_payement",method);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -162,19 +170,11 @@ public class FragmentCard extends Fragment {
     }
 
 
-    public void MakeCommand()
+    public void MakeCommand(Boolean cash)
     {
-        ConstructCommand();
-
-        /*try {
-            Toast.makeText(getActivity(),order.toString(1),Toast.LENGTH_LONG).show();
-            Log.i("TEST JSON", order.toString(1));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
+        ConstructCommand(cash);
 
         new SendCommandToServer().execute(url_order, order.toString());
-
     }
 
 
@@ -213,15 +213,27 @@ public class FragmentCard extends Fragment {
 
     public void GetStatus(String s)
     {
-
         if(s != null)
         {
-            Toast.makeText(getActivity(),"ici "+ s,Toast.LENGTH_LONG).show();
+            try {
+                JSONObject command = new JSONObject(s);
+                Order ord = new Order();
+                ord.id = command.getInt("id");
+                ord.status = command.getString("status");
+                ord.time = command.getString("created_at");
+                ord.method_payement = command.getString("payment_mode");
+                ord.prix = command.getString("total_price");
+                ord.recap = "futur recap";
+                FragmentProfil.myOrders.add(ord);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
-        //recup info
-        //remplir liste dans profil
-
+        myOrderArticles.clear();
+        Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+        Toast.makeText(getActivity(),"Accéder au statut de votre commande dans vore profil !",Toast.LENGTH_SHORT).show();
     }
 
 
@@ -270,6 +282,37 @@ public class FragmentCard extends Fragment {
     }
 
 
+    public void ShowDialogPayement()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View payement = inflater.inflate(R.layout.dialog_payement, null);
+
+        final RadioButton cash = (RadioButton)payement.findViewById(R.id.payement_cash);
+        final RadioButton card = (RadioButton)payement.findViewById(R.id.payement_card);
+        cash.setChecked(true);
+
+        builder.setTitle("Méthode de payement");
+        builder.setView(payement);
+
+        builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //ne rien faire
+            }
+        });
+
+        builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                MakeCommand(cash.isChecked());
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
     public class AdapterOrderArticleToList extends BaseAdapter
     {
         @Override
@@ -291,7 +334,7 @@ public class FragmentCard extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.order_list,parent,false);
+            convertView = inflater.inflate(R.layout.list_order,parent,false);
 
             TextView nom_plat = (TextView)convertView.findViewById(R.id.order_nom_plat);
             TextView prix_pc = (TextView)convertView.findViewById(R.id.order_prix_pc);
