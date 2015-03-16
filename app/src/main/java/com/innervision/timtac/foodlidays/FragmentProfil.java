@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class FragmentProfil extends Fragment {
 
     public static ArrayList<UtilitiesClass.Order> myOrders = new ArrayList<>();
-    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    SharedPreferences prefs;
 
     //UI declaration
     private TextView identifiant;
@@ -36,6 +36,15 @@ public class FragmentProfil extends Fragment {
     private TextView title_command;
     private LinearLayout info_command;
     private ListView list_command;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+      prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    }
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
@@ -91,6 +100,7 @@ public class FragmentProfil extends Fragment {
     public void ShowResume()
     {
         Toast.makeText(getActivity(),"ok",Toast.LENGTH_SHORT).show();
+
     }
 
 
