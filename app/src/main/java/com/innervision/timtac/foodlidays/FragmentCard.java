@@ -50,6 +50,7 @@ public class FragmentCard extends Fragment {
     private Button command;
     private TextView order_total;
     private static ListView orderList;
+    private ImageView delete;
 
     private String url_order = UtilitiesConfig.url_base + UtilitiesConfig.URL_ORDER;
     private JSONObject order;
@@ -63,6 +64,7 @@ public class FragmentCard extends Fragment {
         orderList = (ListView)v.findViewById(R.id.order_list);
         command = (Button)v.findViewById(R.id.order_button);
         order_total = (TextView)v.findViewById(R.id.order_total);
+        delete = (ImageView)v.findViewById(R.id.delete);
 
         if(myOrderArticles.isEmpty()) ShowEmptyCard();
         else FillCard();
@@ -85,6 +87,15 @@ public class FragmentCard extends Fragment {
             }
         });
 
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ShowConfirm();
+            }
+        });
+
         return v;
     }
 
@@ -94,6 +105,7 @@ public class FragmentCard extends Fragment {
         orderList.setVisibility(View.GONE);
         command.setVisibility(View.GONE);
         order_total.setVisibility(View.GONE);
+        delete.setVisibility(View.GONE);
     }
 
 
@@ -109,7 +121,7 @@ public class FragmentCard extends Fragment {
         {
             Total = Total + (Float.parseFloat(myOrderArticles.get(i).prix)*myOrderArticles.get(i).quantity);
         }
-        order_total.setText("Total : " + UtilitiesFunctions.round(Total, 3) + " €");
+        order_total.setText("Total à payer : " + UtilitiesFunctions.round(Total, 3) + " €");
     }
 
 
@@ -305,6 +317,31 @@ public class FragmentCard extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
 
                 MakeCommand(cash.isChecked());
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    public void ShowConfirm()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(" Vous êtes sûr ?");
+        builder.setTitle("Supprimer le panier");
+
+        builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //ne rien faire
+            }
+        });
+
+        builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                myOrderArticles.clear();
+                Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
             }
         });
 

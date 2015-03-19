@@ -139,14 +139,27 @@
                 android:background="@drawable/edit_text_login"
                 android:layout_marginTop="40dp"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Vos commandes : "
-                android:id="@+id/display_command"
-                android:gravity="center_horizontal"
-                android:textSize="17sp"
-                android:layout_marginTop="10dp"/>
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vos commandes : "
+                    android:id="@+id/display_command"
+                    android:textSize="17sp"
+                    android:layout_marginTop="10dp"/>
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:id="@+id/spinner_order"/>
+
+                </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

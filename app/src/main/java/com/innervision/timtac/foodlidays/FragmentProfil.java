@@ -9,19 +9,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
-public class FragmentProfil extends Fragment {
+public class FragmentProfil extends Fragment implements AdapterView.OnItemSelectedListener {
 
     public static ArrayList<UtilitiesClass.Order> myOrders = new ArrayList<>();
+    private ArrayList<String> order_status = new ArrayList<>();
+    private JSONArray allOrders;
     SharedPreferences prefs;
+
 
     //UI declaration
     private TextView identifiant;
@@ -36,6 +43,7 @@ public class FragmentProfil extends Fragment {
     private TextView title_command;
     private LinearLayout info_command;
     private ListView list_command;
+    private Spinner spinner_order;
 
 
     @Override
@@ -43,7 +51,15 @@ public class FragmentProfil extends Fragment {
     {
         super.onCreate(savedInstanceState);
 
-      prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        order_status.add("récentes");
+        order_status.add("en attente");
+        order_status.add("en préparation");
+        order_status.add("livrées");
+        order_status.add("annulées");
+
+        RetrieveOrders();
     }
 
 
@@ -63,14 +79,14 @@ public class FragmentProfil extends Fragment {
         title_command = (TextView)v.findViewById(R.id.display_command);
         info_command = (LinearLayout)v.findViewById(R.id.info_command);
         list_command = (ListView)v.findViewById(R.id.list_command);
+        spinner_order = (Spinner)v.findViewById(R.id.spinner_order);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, order_status);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_order.setAdapter(adapter);
+        spinner_order.setOnItemSelectedListener(this);
 
         FillFields();
-
-        if(myOrders.isEmpty())
-        {
-            ShowEmptyCommand();
-            return v;
-        }
 
         AdapterOrderToList ad = new AdapterOrderToList();
         list_command.setAdapter(ad);
@@ -104,12 +120,9 @@ public class FragmentProfil extends Fragment {
     }
 
 
-    public void ShowEmptyCommand()
+    public void RetrieveOrders()
     {
-        list_command.setVisibility(View.GONE);
-        info_command.setVisibility(View.GONE);
-        title_command.setVisibility(View.GONE);
-        any_order.setVisibility(View.VISIBLE);
+
     }
 
 
@@ -130,6 +143,20 @@ public class FragmentProfil extends Fragment {
         prefs.edit().clear().apply();
         Intent intent= new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
+    }
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        String type = parent.getItemAtPosition(position).toString();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+        //nothing to do
     }
 
 
