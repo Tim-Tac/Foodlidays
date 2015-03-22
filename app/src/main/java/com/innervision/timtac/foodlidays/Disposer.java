@@ -6,15 +6,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 
 
-public class Disposer extends FragmentActivity {
+public class Disposer extends ActionBarActivity implements ActionBar.TabListener{
 
     public static SectionsPagerAdapter mSectionsPagerAdapter;
     public static ViewPager mViewPager;
@@ -32,10 +34,55 @@ public class Disposer extends FragmentActivity {
             startActivity(intent);
         }
 
+        //get handle on ActionBar
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        //actionBar.setDisplayShowHomeEnabled(false);
+        //actionBar.setDisplayShowTitleEnabled(false);
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                actionBar.setSelectedNavigationItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tabs).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tabs).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tabs).setTabListener(this));
+        //actionBar.addTab(actionBar.newTab().setIcon(R.drawable.panier).setTabListener(this));
+        //actionBar.addTab(actionBar.newTab().setIcon(R.drawable.profile).setTabListener(this));
+        //actionBar.hide();
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
     }
 
 
