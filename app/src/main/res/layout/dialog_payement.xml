@@ -13,13 +13,13 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cash"
+            android:text="@string/cash"
             android:id="@+id/payement_cash"/>
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Card"
+            android:text="@string/card_bank"
             android:id="@+id/payement_card"/>
 
     </RadioGroup>

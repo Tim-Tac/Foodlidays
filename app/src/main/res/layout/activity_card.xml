@@ -14,6 +14,7 @@
 
             <ImageView
                 android:id="@+id/order_img"
+                android:contentDescription="@string/app_name"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 />
@@ -23,7 +24,7 @@
                 android:layout_height="50dp"
                 android:paddingLeft="8dp"
                 android:gravity="center_vertical"
-                android:text="Nom du plat"
+                android:text="@string/name_dish"
                 android:layout_weight="1"
                 android:id="@+id/order_nom_plat"
                 android:textSize="14sp"
@@ -34,14 +35,14 @@
                 android:layout_height="50dp"
                 android:gravity="center"
                 android:layout_weight="0"
-                android:text="Prix"
+                android:text="@string/price"
                 android:id="@+id/order_prix_pc"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="60dp"
                 android:layout_height="50dp"
-                android:text="Quantité"
+                android:text="@string/quantity"
                 android:gravity="center"
                 android:layout_weight="0"
                 android:id="@+id/order_quantity"
@@ -53,7 +54,7 @@
                 android:gravity="center"
                 android:layout_marginRight="10dp"
                 android:layout_weight="0"
-                android:text="Total"
+                android:text="@string/total"
                 android:id="@+id/order_prix_st"
                 android:textSize="14sp"/>
 
@@ -62,6 +63,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
+        android:id="@+id/sep"
         android:layout_alignBottom="@+id/order_ligne_info"
         android:background="@drawable/edit_text_login"
         />
@@ -80,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/empty_card"
-        android:textSize="20sp"
+        android:textSize="23sp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textStyle="italic"
@@ -89,12 +91,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total à payer : "
+        android:text="@string/total_order"
         android:textSize="20sp"
         android:id="@+id/order_total"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="100dp"
+        android:layout_marginRight="70dp"
         android:layout_marginBottom="80dp"/>
 
     <ImageView
@@ -104,17 +106,18 @@
         android:src="@android:drawable/ic_delete"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="75dp"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginBottom="77dp"
+        android:layout_marginRight="25dp"
+        android:contentDescription="@string/app_name" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
         android:textColor="#DDDDDD"
         android:background="@drawable/button_bg"
-        android:text="Passer la commande"
+        android:text="@string/ordering"
         android:id="@+id/order_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

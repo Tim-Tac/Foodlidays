@@ -237,7 +237,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
             } else any_restaurants.setVisibility(View.VISIBLE);
 
-        } else Toast.makeText(getActivity(), "Erreur lors de l'accès au réseau, veuillez réessayer plus tard", Toast.LENGTH_LONG).show();
+        } else Toast.makeText(getActivity(), getString(R.string.errror_network), Toast.LENGTH_LONG).show();
     }
 
 
@@ -355,7 +355,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
                         Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
                         spinner_selected = selected;
-                        Toast.makeText(getActivity(),article.name + " ajouté au panier !",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(),article.name + " " + getString(R.string.added_cart) ,Toast.LENGTH_LONG).show();
                     }
                 });
 

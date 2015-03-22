@@ -17,7 +17,7 @@
             android:layout_height="50dp"
             android:paddingLeft="8dp"
             android:gravity="center_vertical"
-            android:text="Nom du plat"
+            android:text="@string/name_dish"
             android:layout_weight="1"
             android:id="@+id/order_nom_plat"
             android:textSize="14sp"/>
@@ -27,14 +27,14 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:layout_weight="0"
-            android:text="Prix"
+            android:text="@string/price"
             android:id="@+id/order_prix_pc"
             android:textSize="14sp" />
 
         <TextView
             android:layout_width="60dp"
             android:layout_height="50dp"
-            android:text="Quantité"
+            android:text="@string/quantity"
             android:gravity="center"
             android:layout_weight="0"
             android:id="@+id/order_quantity"
@@ -46,7 +46,7 @@
             android:gravity="center"
             android:layout_marginRight="10dp"
             android:layout_weight="0"
-            android:text="Total"
+            android:text="@string/total"
             android:id="@+id/order_prix_st"
             android:textSize="14sp"/>
 

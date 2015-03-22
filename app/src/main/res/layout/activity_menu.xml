@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Catégorie:"
+            android:text="@string/category"
             android:layout_marginTop="15dp"
             android:textSize="22sp" />
 
@@ -25,7 +25,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="15dp" />
 
         </LinearLayout>
 

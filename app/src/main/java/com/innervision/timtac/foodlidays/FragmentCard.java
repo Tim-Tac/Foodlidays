@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
@@ -51,6 +52,8 @@ public class FragmentCard extends Fragment {
     private TextView order_total;
     private static ListView orderList;
     private ImageView delete;
+    private LinearLayout order_ligne_info;
+    private View separator;
 
     private String url_order = UtilitiesConfig.url_base + UtilitiesConfig.URL_ORDER;
     private JSONObject order;
@@ -65,6 +68,8 @@ public class FragmentCard extends Fragment {
         command = (Button)v.findViewById(R.id.order_button);
         order_total = (TextView)v.findViewById(R.id.order_total);
         delete = (ImageView)v.findViewById(R.id.delete);
+        order_ligne_info = (LinearLayout)v.findViewById(R.id.order_ligne_info);
+        separator = v.findViewById(R.id.sep);
 
         if(myOrderArticles.isEmpty()) ShowEmptyCard();
         else FillCard();
@@ -106,6 +111,8 @@ public class FragmentCard extends Fragment {
         command.setVisibility(View.GONE);
         order_total.setVisibility(View.GONE);
         delete.setVisibility(View.GONE);
+        order_ligne_info.setVisibility(View.GONE);
+        separator.setVisibility(View.GONE);
     }
 
 
@@ -121,7 +128,7 @@ public class FragmentCard extends Fragment {
         {
             Total = Total + (Float.parseFloat(myOrderArticles.get(i).prix)*myOrderArticles.get(i).quantity);
         }
-        order_total.setText("Total à payer : " + UtilitiesFunctions.round(Total, 3) + " €");
+        order_total.setText(getString(R.string.total_order) + " " + UtilitiesFunctions.round(Total, 3) + " €");
     }
 
 
@@ -245,7 +252,7 @@ public class FragmentCard extends Fragment {
 
         myOrderArticles.clear();
         Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
-        Toast.makeText(getActivity(),"Accéder au statut de votre commande dans vore profil !",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_SHORT).show();
     }
 
 
@@ -265,7 +272,7 @@ public class FragmentCard extends Fragment {
         UtilitiesFunctions.setNumberPickerTextColor(pick, 0xff000000);
 
 
-        builder.setTitle("Quantité " + article.name);
+        builder.setTitle(getString(R.string.quantity) + " "+ article.name);
         builder.setView(quantity_view);
 
         builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
@@ -274,14 +281,14 @@ public class FragmentCard extends Fragment {
             }
         });
 
-        builder.setPositiveButton("Modifier la quantité", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.modify), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 article.quantity = pick.getValue();
                 Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
             }
         });
 
-        builder.setNeutralButton("Supprimer l'article", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 myOrderArticles.remove(position);
                 Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
@@ -304,7 +311,7 @@ public class FragmentCard extends Fragment {
         final RadioButton card = (RadioButton)payement.findViewById(R.id.payement_card);
         cash.setChecked(true);
 
-        builder.setTitle("Méthode de payement");
+        builder.setTitle(getString(R.string.payment_method));
         builder.setView(payement);
 
         builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
@@ -328,8 +335,8 @@ public class FragmentCard extends Fragment {
     public void ShowConfirm()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(" Vous êtes sûr ?");
-        builder.setTitle("Supprimer le panier");
+        builder.setMessage(getString(R.string.confirm));
+        builder.setTitle(getString(R.string.delete_card));
 
         builder.setNegativeButton(R.string.cancel_action, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

@@ -17,9 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
-
 import java.util.ArrayList;
 
 public class FragmentProfil extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -53,11 +51,10 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        order_status.add("récentes");
-        order_status.add("en attente");
-        order_status.add("en préparation");
-        order_status.add("livrées");
-        order_status.add("annulées");
+        order_status.add(getString(R.string.order_pending));
+        order_status.add(getString(R.string.order_processed));
+        order_status.add(getString(R.string.order_delivered));
+        order_status.add(getString(R.string.order_canceled));
 
         RetrieveOrders();
     }
@@ -91,7 +88,6 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
         AdapterOrderToList ad = new AdapterOrderToList();
         list_command.setAdapter(ad);
 
-
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +101,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                ShowResume();
+                ShowResume(position);
             }
         });
 
@@ -113,16 +109,16 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     }
 
 
-    public void ShowResume()
+    public void ShowResume(int pos)
     {
-        Toast.makeText(getActivity(),"ok",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),"résumé de la commande" + String.valueOf(pos),Toast.LENGTH_SHORT).show();
 
     }
 
 
     public void RetrieveOrders()
     {
-
+        //scrip pour récup sur le serveur
     }
 
 
@@ -150,6 +146,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         String type = parent.getItemAtPosition(position).toString();
+        Toast.makeText(getActivity(),type,Toast.LENGTH_SHORT).show();
 
     }
 

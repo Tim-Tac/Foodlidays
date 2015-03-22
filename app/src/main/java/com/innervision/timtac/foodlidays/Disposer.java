@@ -2,6 +2,7 @@ package com.innervision.timtac.foodlidays;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,8 +38,9 @@ public class Disposer extends ActionBarActivity implements ActionBar.TabListener
         //get handle on ActionBar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        //actionBar.setDisplayShowHomeEnabled(false);
-        //actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setStackedBackgroundDrawable(new ColorDrawable(0xffC1832C));
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -62,12 +64,9 @@ public class Disposer extends ActionBarActivity implements ActionBar.TabListener
         });
 
 
-        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tabs).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tabs).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tabs).setTabListener(this));
-        //actionBar.addTab(actionBar.newTab().setIcon(R.drawable.panier).setTabListener(this));
-        //actionBar.addTab(actionBar.newTab().setIcon(R.drawable.profile).setTabListener(this));
-        //actionBar.hide();
+        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tab_menu).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tab_order).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setCustomView(R.layout.tab_profil).setTabListener(this));
     }
 
     @Override

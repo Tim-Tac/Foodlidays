@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quantité : "
+            android:text="@string/quantity"
             android:layout_gravity="center_vertical"
             android:textColor="#000000"
             android:textSize="17sp"
