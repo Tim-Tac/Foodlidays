@@ -3,7 +3,6 @@ package com.innervision.timtac.foodlidays;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -12,10 +11,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
-
 
 public class Disposer extends ActionBarActivity implements ActionBar.TabListener{
 
@@ -134,13 +129,5 @@ public class Disposer extends ActionBarActivity implements ActionBar.TabListener
         }
     }
 
-    public static CharSequence addIconToText(Drawable d, String s){
 
-        SpannableStringBuilder sb = new SpannableStringBuilder(" " /*+s*/ );
-        d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-        ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
-        sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return sb;
-
-    }
 }

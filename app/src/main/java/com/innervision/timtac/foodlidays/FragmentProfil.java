@@ -2,9 +2,11 @@ package com.innervision.timtac.foodlidays;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +19,25 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class FragmentProfil extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    public static ArrayList<UtilitiesClass.Order> myOrders = new ArrayList<>();
+    private static ArrayList<UtilitiesClass.Order> ordersWanted = new ArrayList<>();
+    private static ArrayList<UtilitiesClass.Order> allOrder = new ArrayList<>();
     private ArrayList<String> order_status = new ArrayList<>();
-    private JSONArray allOrders;
-    SharedPreferences prefs;
-
+    private JSONArray jArrayOrder;
+    private SharedPreferences prefs;
 
     //UI declaration
     private TextView identifiant;
@@ -38,11 +49,12 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     private TextView numero;
     private Button deco;
     private TextView any_order;
-    private TextView title_command;
     private LinearLayout info_command;
     private ListView list_command;
     private Spinner spinner_order;
 
+
+    /*******************  Initialisation et récup des commandes du serveur ************************/
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -51,6 +63,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        order_status.add(getString(R.string.last));
         order_status.add(getString(R.string.order_pending));
         order_status.add(getString(R.string.order_processed));
         order_status.add(getString(R.string.order_delivered));
@@ -58,6 +71,78 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
 
         RetrieveOrders();
     }
+
+
+    public void RetrieveOrders()
+    {
+
+        new GetAllOrdersForEmailFromServer().execute();
+    }
+
+
+    public class GetAllOrdersForEmailFromServer extends AsyncTask<String, String, String>
+    {
+        @Override
+        protected String doInBackground(String... params) {
+            String res = null;
+            String url = UtilitiesConfig.url_base + UtilitiesConfig.URL_GET_ORDER + prefs.getString("session_email","");
+
+            try{
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpGet request = new HttpGet(url);
+                HttpResponse response = httpclient.execute(request);
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                res = in.readLine();
+                in.close();
+
+            }catch(Exception e){
+                Log.e("log_tag", "Error in http connection " + e.toString());
+            }
+            return res;
+        }
+
+        @Override
+        protected void onPostExecute(String ligne)
+        {
+            super.onPostExecute(ligne);
+            FillAllOrders(ligne);
+        }
+    }
+
+
+    public void FillAllOrders(String s)
+    {
+        if(s != null)
+        {
+            try
+            {
+                JSONArray jArr = new JSONArray(s);
+
+                for(int i=0 ; i<jArr.length(); i++)
+                {
+                    JSONObject j = jArr.getJSONObject(i);
+                    UtilitiesClass.Order ord = new UtilitiesClass.Order();
+                    ord.id = j.getInt("id");
+                    ord.status = j.getString("status");
+                    ord.time = j.getString("created_at");
+                    ord.method_payement = j.getString("payment_mode");
+                    ord.prix = j.getString("total_price");
+                    ord.recap = j.getString("recap");
+                    allOrder.add(ord);
+                }
+                Toast.makeText(getActivity(),allOrder.toString(),Toast.LENGTH_LONG).show();
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(getActivity(),"catch",Toast.LENGTH_LONG).show();
+        }
+        else Toast.makeText(getActivity(),"null",Toast.LENGTH_LONG).show();
+    }
+
+
+
+    /************************ création de la liste des commandes voulues **************************/
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
@@ -73,20 +158,24 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
         numero = (TextView)v.findViewById(R.id.numero);
         deco = (Button)v.findViewById(R.id.deco);
         any_order = (TextView)v.findViewById(R.id.any_command);
-        title_command = (TextView)v.findViewById(R.id.display_command);
         info_command = (LinearLayout)v.findViewById(R.id.info_command);
         list_command = (ListView)v.findViewById(R.id.list_command);
         spinner_order = (Spinner)v.findViewById(R.id.spinner_order);
 
+        if(ordersWanted.isEmpty())
+        {
+            any_order.setVisibility(View.VISIBLE);
+            info_command.setVisibility(View.GONE);
+            list_command.setVisibility(View.GONE);
+        }
+
+        //fill spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, order_status);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_order.setAdapter(adapter);
         spinner_order.setOnItemSelectedListener(this);
 
         FillFields();
-
-        AdapterOrderToList ad = new AdapterOrderToList();
-        list_command.setAdapter(ad);
 
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,29 +185,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
             }
         });
 
-
-        list_command.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                ShowResume(position);
-            }
-        });
-
         return v;
-    }
-
-
-    public void ShowResume(int pos)
-    {
-        Toast.makeText(getActivity(),"résumé de la commande" + String.valueOf(pos),Toast.LENGTH_SHORT).show();
-
-    }
-
-
-    public void RetrieveOrders()
-    {
-        //scrip pour récup sur le serveur
     }
 
 
@@ -134,39 +201,76 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     }
 
 
-    public void DeconnectUser()
-    {
-        prefs.edit().clear().apply();
-        Intent intent= new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-    }
+
+
+
 
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         String type = parent.getItemAtPosition(position).toString();
-        Toast.makeText(getActivity(),type,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(),type,Toast.LENGTH_SHORT).show();
+
+        /*//on veut juste la dernière
+        if(position == 0)
+        {
+            ordersWanted.add(allOrder.get(allOrder.size()));
+        }
+        else
+        {
+            for(UtilitiesClass.Order o : allOrder)
+            {
+                //si même statut
+                ordersWanted.add(o);
+            }
+        }
+
+        AdapterOrderToList ad = new AdapterOrderToList();
+        list_command.setAdapter(ad);
+
+        list_command.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ShowResume(position);
+            }
+        });*/
 
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent)
+
+
+
+
+
+    public void ShowResume(int pos)
     {
-        //nothing to do
+        final UtilitiesClass.Order ord = (UtilitiesClass.Order)list_command.getItemAtPosition(pos);
+
+
+
+        Toast.makeText(getActivity(),"futur résumé de " + ord.id,Toast.LENGTH_SHORT).show();
     }
+
+
+
+
+
+
+
 
 
     public class AdapterOrderToList extends BaseAdapter
     {
         @Override
         public int getCount() {
-            return myOrders.size();
+            return ordersWanted.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return myOrders.get(position);
+            return ordersWanted.get(position);
         }
 
         @Override
@@ -184,7 +288,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
             TextView command_status = (TextView)convertView.findViewById(R.id.command_status);
             TextView command_time = (TextView)convertView.findViewById(R.id.command_time);
 
-            final UtilitiesClass.Order ord = myOrders.get(position);
+            final UtilitiesClass.Order ord = ordersWanted.get(position);
 
             command_id.setText(String.valueOf(ord.id));
             command_time.setText(ord.time);
@@ -194,4 +298,21 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
 
         }
     }
+
+
+    public void DeconnectUser()
+    {
+        prefs.edit().clear().apply();
+        Intent intent= new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+        //nothing to do
+    }
+
+
 }

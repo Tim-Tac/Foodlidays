@@ -35,7 +35,7 @@
     <string name="total">Total</string>
     <string name="total_order">Total à payer : </string>
     <string name="ordering">Passer la commande</string>
-    <string name="any_order">Pas de commande pour le moment</string>
+    <string name="any_order">Aucunes commandes</string>
     <string name="number">Numéro</string>
     <string name="status">Statut</string>
     <string name="date">Date</string>
@@ -50,10 +50,12 @@
     <string name="payment_method">Méthode de payement</string>
     <string name="confirm">Vous êtes sûr ?</string>
     <string name="delete_card">Supprimer le panier</string>
-    <string name="errror_network">Erreur lors de l\'accès au réseau, veuillez réessayer plus tard</string>
+    <string name="errror_network">Erreur lors de l\'accès au réseau, veuillez ré-essayer plus tard</string>
     <string name="added_cart">ajouté au apnier !</string>
-    <string name="order_pending">En attente</string>
-    <string name="order_processed">Préparée</string>
-    <string name="order_delivered">Délivrée</string>
-    <string name="order_canceled">Annulée</string>
+    <string name="order_pending">En attentes</string>
+    <string name="order_processed">Préparées</string>
+    <string name="order_delivered">Délivrées</string>
+    <string name="order_canceled">Annulées</string>
+    <string name="error_order">une erreur est survenue lors de la création de la commande, veuillez ré-essayer plus tard</string>
+    <string name="last">La dernière</string>
 </resources>

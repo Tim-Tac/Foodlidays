@@ -234,25 +234,38 @@ public class FragmentCard extends Fragment {
     {
         if(s != null)
         {
-            try {
-                JSONObject command = new JSONObject(s);
-                Order ord = new Order();
-                ord.id = command.getInt("id");
-                ord.status = command.getString("status");
-                ord.time = command.getString("created_at");
-                ord.method_payement = command.getString("payment_mode");
-                ord.prix = command.getString("total_price");
-                ord.recap = "futur recap";
-                FragmentProfil.myOrders.add(ord);
+            if(s.length() > 30)
+            {
+                try
+                {
+                    JSONObject command = new JSONObject(s);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    if(command.has("id") && command.has("status")) Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(getActivity(),getString(R.string.error_order),Toast.LENGTH_LONG).show();
+
+                    /*Order ord = new Order();
+                    ord.id = command.getInt("id");
+                    ord.status = command.getString("status");
+                    ord.time = command.getString("created_at");
+                    ord.method_payement = command.getString("payment_mode");
+                    ord.prix = command.getString("total_price");
+                    ord.recap = "futur recap";
+                    FragmentProfil.OrdersWanted.add(ord);*/
+
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                myOrderArticles.clear();
+                Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+
             }
+            else Toast.makeText(getActivity(),getString(R.string.errror_network),Toast.LENGTH_SHORT).show();
         }
+        else Toast.makeText(getActivity(),getString(R.string.errror_network),Toast.LENGTH_SHORT).show();
 
-        myOrderArticles.clear();
-        Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
-        Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_SHORT).show();
+
     }
 
 

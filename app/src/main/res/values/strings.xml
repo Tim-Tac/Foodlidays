@@ -56,4 +56,6 @@
     <string name="order_processed">Processed</string>
     <string name="order_delivered">Delivered</string>
     <string name="order_canceled">Canceled</string>
+    <string name="error_order">An error occured during the creation of the order, please try again later</string>
+    <string name="last">Last</string>
 </resources>
