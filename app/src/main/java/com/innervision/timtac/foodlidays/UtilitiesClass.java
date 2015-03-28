@@ -1,5 +1,7 @@
 package com.innervision.timtac.foodlidays;
 
+import org.json.JSONArray;
+
 public class UtilitiesClass {
 
     public static class Order_Article
@@ -23,7 +25,7 @@ public class UtilitiesClass {
     public static class Order
     {
         int id;
-        String recap;
+        JSONArray recap;
         String status;
         String time;
         String method_payement;

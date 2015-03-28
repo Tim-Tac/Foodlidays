@@ -1,5 +1,7 @@
 package com.innervision.timtac.foodlidays;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -14,8 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +56,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     private LinearLayout info_command;
     private ListView list_command;
     private Spinner spinner_order;
+    private ImageView reload;
 
 
     /*******************  Initialisation et récup des commandes du serveur ************************/
@@ -114,30 +119,30 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     {
         if(s != null)
         {
-            try
+            if(s.length() > 50)
             {
-                JSONArray jArr = new JSONArray(s);
+                try {
+                    jArrayOrder = new JSONArray(s);
 
-                for(int i=0 ; i<jArr.length(); i++)
-                {
-                    JSONObject j = jArr.getJSONObject(i);
-                    UtilitiesClass.Order ord = new UtilitiesClass.Order();
-                    ord.id = j.getInt("id");
-                    ord.status = j.getString("status");
-                    ord.time = j.getString("created_at");
-                    ord.method_payement = j.getString("payment_mode");
-                    ord.prix = j.getString("total_price");
-                    ord.recap = j.getString("recap");
-                    allOrder.add(ord);
+                    for (int i = 0; i < jArrayOrder.length(); i++)
+                    {
+                        JSONObject j = jArrayOrder.getJSONObject(i);
+                        UtilitiesClass.Order ord = new UtilitiesClass.Order();
+                        ord.id = j.getInt("id");
+                        ord.status = j.getString("status");
+                        ord.time = j.getString("created_at");
+                        ord.method_payement = j.getString("payment_mode");
+                        ord.prix = j.getString("total_price");
+                        ord.recap = j.getJSONArray("foods");
+                        allOrder.add(ord);
+                    }
+                    Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                Toast.makeText(getActivity(),allOrder.toString(),Toast.LENGTH_LONG).show();
             }
-            catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Toast.makeText(getActivity(),"catch",Toast.LENGTH_LONG).show();
         }
-        else Toast.makeText(getActivity(),"null",Toast.LENGTH_LONG).show();
+        else Toast.makeText(getActivity(),getString(R.string.errror_network),Toast.LENGTH_LONG).show();
     }
 
 
@@ -161,13 +166,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
         info_command = (LinearLayout)v.findViewById(R.id.info_command);
         list_command = (ListView)v.findViewById(R.id.list_command);
         spinner_order = (Spinner)v.findViewById(R.id.spinner_order);
-
-        if(ordersWanted.isEmpty())
-        {
-            any_order.setVisibility(View.VISIBLE);
-            info_command.setVisibility(View.GONE);
-            list_command.setVisibility(View.GONE);
-        }
+        reload = (ImageView)v.findViewById(R.id.reload);
 
         //fill spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, order_status);
@@ -182,6 +181,16 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
             public void onClick(View v) {
 
                 DeconnectUser();
+            }
+        });
+
+        reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new GetAllOrdersForEmailFromServer().execute();
+                Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(),getString(R.string.reloaded),Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -201,29 +210,55 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     }
 
 
-
-
-
-
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
-        String type = parent.getItemAtPosition(position).toString();
-        //Toast.makeText(getActivity(),type,Toast.LENGTH_SHORT).show();
+        ordersWanted.clear();
 
-        /*//on veut juste la dernière
-        if(position == 0)
+        if(!allOrder.isEmpty())
         {
-            ordersWanted.add(allOrder.get(allOrder.size()));
+            any_order.setVisibility(View.GONE);
+            info_command.setVisibility(View.VISIBLE);
+            list_command.setVisibility(View.VISIBLE);
+            switch (position)
+            {
+                case 0 : ordersWanted.add(allOrder.get(allOrder.size() - 1));
+                    break;
+                case 1 :
+                    for (UtilitiesClass.Order o : allOrder)
+                    {
+                        if(o.status.equals("pending"))
+                            ordersWanted.add(o);
+                    }
+                    break;
+                case 2 :
+                    for (UtilitiesClass.Order o : allOrder)
+                    {
+                        if(o.status.equals("processed"))
+                            ordersWanted.add(o);
+                    }
+                    break;
+                case 3 :
+                    for (UtilitiesClass.Order o : allOrder)
+                    {
+                        if(o.status.equals("delivered"))
+                            ordersWanted.add(o);
+                    }
+                    break;
+                case 4 :
+                    for (UtilitiesClass.Order o : allOrder)
+                    {
+                        if(o.status.equals("canceled"))
+                            ordersWanted.add(o);
+                    }
+                    break;
+            }
         }
         else
         {
-            for(UtilitiesClass.Order o : allOrder)
-            {
-                //si même statut
-                ordersWanted.add(o);
-            }
+            any_order.setVisibility(View.VISIBLE);
+            info_command.setVisibility(View.GONE);
+            list_command.setVisibility(View.GONE);
         }
 
         AdapterOrderToList ad = new AdapterOrderToList();
@@ -235,30 +270,48 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
 
                 ShowResume(position);
             }
-        });*/
-
+        });
     }
-
-
-
-
 
 
     public void ShowResume(int pos)
     {
         final UtilitiesClass.Order ord = (UtilitiesClass.Order)list_command.getItemAtPosition(pos);
 
+        for(UtilitiesClass.Order o : allOrder)
+        {
+            if(o.id == ord.id)
+            {
+                String msg = "";
+
+                for(int i=0;i<o.recap.length();i++)
+                {
+                    try {
+                        JSONObject jObj = o.recap.getJSONObject(i);
+                        msg = msg + jObj.getString("ordered_quantity") + " x " + jObj.getString("food_name") + "\n\n";
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                msg = msg + "------------------------" + "\n\n" + o.method_payement + ", " + o.prix + "€";
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("info");
+                builder.setMessage(msg);
 
 
-        Toast.makeText(getActivity(),"futur résumé de " + ord.id,Toast.LENGTH_SHORT).show();
+                builder.setPositiveButton(R.string.ok_action, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //nothing to o
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
     }
-
-
-
-
-
-
-
 
 
     public class AdapterOrderToList extends BaseAdapter

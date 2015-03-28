@@ -9,11 +9,9 @@
     tools:context="com.innervision.timtac.foodlidays.FragmentProfil" >
 
     <ScrollView
-
         android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:orientation="vertical"
@@ -143,7 +141,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_horizontal">
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/reload"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/reload"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -194,9 +200,9 @@
 
 
             <ListView
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
                 android:id="@+id/list_command"/>
 
 
@@ -213,7 +219,7 @@
                 android:visibility="gone"/>
 
             <RelativeLayout
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

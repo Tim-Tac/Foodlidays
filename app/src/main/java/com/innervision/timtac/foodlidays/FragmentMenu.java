@@ -320,7 +320,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
                 ImageView im = (ImageView) dialog_view.findViewById(R.id.big_pic);
                 Picasso.with(getActivity()).load(UtilitiesConfig.url_base + "/uploads/" + article.image).into(im);
                 final NumberPicker pick = (NumberPicker)dialog_view.findViewById(R.id.numberPicker);
-                pick.setMaxValue(25);
+                pick.setMaxValue(99);
                 pick.setMinValue(1);
                 UtilitiesFunctions.setNumberPickerTextColor(pick, 0xff000000);
 

@@ -51,11 +51,12 @@
     <string name="confirm">Vous êtes sûr ?</string>
     <string name="delete_card">Supprimer le panier</string>
     <string name="errror_network">Erreur lors de l\'accès au réseau, veuillez ré-essayer plus tard</string>
-    <string name="added_cart">ajouté au apnier !</string>
+    <string name="added_cart">ajouté au panier !</string>
     <string name="order_pending">En attentes</string>
     <string name="order_processed">Préparées</string>
     <string name="order_delivered">Délivrées</string>
     <string name="order_canceled">Annulées</string>
     <string name="error_order">une erreur est survenue lors de la création de la commande, veuillez ré-essayer plus tard</string>
     <string name="last">La dernière</string>
+    <string name="reloaded">rafraichi</string>
 </resources>

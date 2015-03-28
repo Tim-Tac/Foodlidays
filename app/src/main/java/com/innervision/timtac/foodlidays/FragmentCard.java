@@ -240,25 +240,18 @@ public class FragmentCard extends Fragment {
                 {
                     JSONObject command = new JSONObject(s);
 
-                    if(command.has("id") && command.has("status")) Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_SHORT).show();
+                    if(command.has("id") && command.has("status"))
+                    {
+                        myOrderArticles.clear();
+                        Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+                        Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_SHORT).show();
+                    }
                     else Toast.makeText(getActivity(),getString(R.string.error_order),Toast.LENGTH_LONG).show();
-
-                    /*Order ord = new Order();
-                    ord.id = command.getInt("id");
-                    ord.status = command.getString("status");
-                    ord.time = command.getString("created_at");
-                    ord.method_payement = command.getString("payment_mode");
-                    ord.prix = command.getString("total_price");
-                    ord.recap = "futur recap";
-                    FragmentProfil.OrdersWanted.add(ord);*/
-
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
+                    Log.i("GETSTATUS","failed");
                 }
-
-                myOrderArticles.clear();
-                Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
 
             }
             else Toast.makeText(getActivity(),getString(R.string.errror_network),Toast.LENGTH_SHORT).show();
