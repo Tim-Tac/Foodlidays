@@ -243,14 +243,12 @@ public class FragmentCard extends Fragment {
                     if(command.has("id") && command.has("status"))
                     {
                         myOrderArticles.clear();
-                        Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
                         Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_SHORT).show();
                     }
                     else Toast.makeText(getActivity(),getString(R.string.error_order),Toast.LENGTH_LONG).show();
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
-                    Log.i("GETSTATUS","failed");
                 }
 
             }
@@ -314,7 +312,6 @@ public class FragmentCard extends Fragment {
         View payement = inflater.inflate(R.layout.dialog_payement, null);
 
         final RadioButton cash = (RadioButton)payement.findViewById(R.id.payement_cash);
-        final RadioButton card = (RadioButton)payement.findViewById(R.id.payement_card);
         cash.setChecked(true);
 
         builder.setTitle(getString(R.string.payment_method));
