@@ -29,6 +29,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -50,13 +51,57 @@ public class FragmentCard extends Fragment {
     private TextView empty;
     private Button command;
     private TextView order_total;
+    private TextView manag_fee;
+    private TextView sub_total;
     private static ListView orderList;
     private ImageView delete;
     private LinearLayout order_ligne_info;
     private View separator;
 
+    float fee = 0;
+    private String url_fee = UtilitiesConfig.url_base + UtilitiesConfig.URL_GET_MANAGEMENT;
     private String url_order = UtilitiesConfig.url_base + UtilitiesConfig.URL_ORDER;
     private JSONObject order;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        new GetCatFromServer().execute();
+    }
+
+
+    public class GetCatFromServer extends AsyncTask<String, String, String>
+    {
+        @Override
+        protected String doInBackground(String... params) {
+            String res = null;
+            try{
+
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpGet request = new HttpGet(url_fee);
+                HttpResponse response = httpclient.execute(request);
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                res = in.readLine();
+                in.close();
+
+            }catch(Exception e){
+                Log.e("log_tag", "Error in http connection " + e.toString());
+            }
+            return res;
+        }
+
+        @Override
+        protected void onPostExecute(String ligne)
+        {
+            super.onPostExecute(ligne);
+            fee = Float.parseFloat(ligne);
+        }
+    }
+
+
+    /****************************** Construction du panier *****************************************/
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle saved)
@@ -67,6 +112,8 @@ public class FragmentCard extends Fragment {
         orderList = (ListView)v.findViewById(R.id.order_list);
         command = (Button)v.findViewById(R.id.order_button);
         order_total = (TextView)v.findViewById(R.id.order_total);
+        manag_fee = (TextView)v.findViewById(R.id.fee_price);
+        sub_total = (TextView)v.findViewById(R.id.sub_total);
         delete = (ImageView)v.findViewById(R.id.delete);
         order_ligne_info = (LinearLayout)v.findViewById(R.id.order_ligne_info);
         separator = v.findViewById(R.id.sep);
@@ -113,6 +160,8 @@ public class FragmentCard extends Fragment {
         delete.setVisibility(View.GONE);
         order_ligne_info.setVisibility(View.GONE);
         separator.setVisibility(View.GONE);
+        sub_total.setVisibility(View.GONE);
+        manag_fee.setVisibility(View.GONE);
     }
 
 
@@ -128,7 +177,13 @@ public class FragmentCard extends Fragment {
         {
             Total = Total + (Float.parseFloat(myOrderArticles.get(i).prix)*myOrderArticles.get(i).quantity);
         }
-        order_total.setText(getString(R.string.total_order) + " " + UtilitiesFunctions.round(Total, 3) + " €");
+
+        Float sub = UtilitiesFunctions.round(Total, 3);
+        Float tot = UtilitiesFunctions.round(sub + fee,3);
+
+        sub_total.setText(getString(R.string.sub_total) + " " + String.valueOf(sub) + " €");
+        manag_fee.setText(getString(R.string.manag_fee) + " " + String.valueOf(fee) + " €");
+        order_total.setText(getString(R.string.total_order) + " " + String.valueOf(tot) + " €");
     }
 
 
@@ -243,7 +298,8 @@ public class FragmentCard extends Fragment {
                     if(command.has("id") && command.has("status"))
                     {
                         myOrderArticles.clear();
-                        Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_SHORT).show();
+                        Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+                        Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_LONG).show();
                     }
                     else Toast.makeText(getActivity(),getString(R.string.error_order),Toast.LENGTH_LONG).show();
                 }
@@ -252,10 +308,9 @@ public class FragmentCard extends Fragment {
                 }
 
             }
-            else Toast.makeText(getActivity(),getString(R.string.errror_network),Toast.LENGTH_SHORT).show();
+            else Toast.makeText(getActivity(),getString(R.string.error_network),Toast.LENGTH_SHORT).show();
         }
-        else Toast.makeText(getActivity(),getString(R.string.errror_network),Toast.LENGTH_SHORT).show();
-
+        else Toast.makeText(getActivity(),getString(R.string.error_network),Toast.LENGTH_SHORT).show();
 
     }
 
@@ -270,7 +325,7 @@ public class FragmentCard extends Fragment {
         View quantity_view = inflater.inflate(R.layout.dialog_quantity, null);
 
         final NumberPicker pick = (NumberPicker)quantity_view.findViewById(R.id.numberPicker);
-        pick.setMaxValue(25);
+        pick.setMaxValue(99);
         pick.setMinValue(1);
         pick.setValue(article.quantity);
         UtilitiesFunctions.setNumberPickerTextColor(pick, 0xff000000);

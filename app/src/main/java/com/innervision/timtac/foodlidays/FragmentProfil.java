@@ -76,7 +76,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
         order_status.add(getString(R.string.order_delivered));
         order_status.add(getString(R.string.order_canceled));
 
-        RetrieveOrders();
+        if(UtilitiesFunctions.isConnected(getActivity())) RetrieveOrders();
     }
 
 
@@ -144,7 +144,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
                 }
             }
         }
-        else Toast.makeText(getActivity(),getString(R.string.errror_network),Toast.LENGTH_LONG).show();
+        else Toast.makeText(getActivity(),getString(R.string.error_network),Toast.LENGTH_LONG).show();
     }
 
 

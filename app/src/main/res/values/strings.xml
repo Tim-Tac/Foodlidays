@@ -50,7 +50,7 @@
     <string name="payment_method">Method of payment</string>
     <string name="confirm">Are you sure ?</string>
     <string name="delete_card">Delete the card</string>
-    <string name="errror_network">Error network access, please try again later</string>
+    <string name="error_network">Error network access, please try again later</string>
     <string name="added_cart">added to cart !</string>
     <string name="order_pending">Pending</string>
     <string name="order_processed">Processed</string>
@@ -59,4 +59,6 @@
     <string name="error_order">An error occured during the creation of the order, please try again later</string>
     <string name="last">Last</string>
     <string name="reloaded">refreshed</string>
+    <string name="sub_total">Sub total :</string>
+    <string name="manag_fee">Management fee :</string>
 </resources>

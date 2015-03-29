@@ -54,6 +54,24 @@ public class UtilitiesFunctions extends Activity{
         return ( netInfo != null && netInfo.isConnected() );
     }
 
+    public static NetworkInfo getNetworkInfo(Context context)
+    {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo();
+    }
+
+    public static boolean isConnected(Context context)
+    {
+        NetworkInfo info = UtilitiesFunctions.getNetworkInfo(context);
+        return (info != null && info.isConnected());
+    }
+
+    static boolean isConnectedWifi(Context context)
+    {
+        NetworkInfo info = UtilitiesFunctions.getNetworkInfo(context);
+        return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
+    }
+
     public static void DisplayError(String s, Activity activity)
     {
         SuperCardToast superCardToast = new SuperCardToast(activity);

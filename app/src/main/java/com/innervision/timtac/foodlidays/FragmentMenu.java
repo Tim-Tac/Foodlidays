@@ -152,7 +152,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
         spinner.setOnItemSelectedListener(this);
 
         // Si pas de réseau
-        if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext())) return v;
+        if(!UtilitiesFunctions.isConnected(getActivity().getApplicationContext())) return v;
 
         //rempli le spinner des catégories existantes
         RetrieveExistingCat();
@@ -237,7 +237,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
 
             } else any_restaurants.setVisibility(View.VISIBLE);
 
-        } else Toast.makeText(getActivity(), getString(R.string.errror_network), Toast.LENGTH_LONG).show();
+        } else Toast.makeText(getActivity(), getString(R.string.error_network), Toast.LENGTH_LONG).show();
     }
 
 
