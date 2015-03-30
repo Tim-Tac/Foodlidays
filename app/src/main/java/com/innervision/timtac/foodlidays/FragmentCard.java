@@ -96,7 +96,7 @@ public class FragmentCard extends Fragment {
         protected void onPostExecute(String ligne)
         {
             super.onPostExecute(ligne);
-            fee = Float.parseFloat(ligne);
+            if(ligne != null) fee = Float.parseFloat(ligne);
         }
     }
 
