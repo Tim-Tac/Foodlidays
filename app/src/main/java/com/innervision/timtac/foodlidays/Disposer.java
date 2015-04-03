@@ -26,6 +26,7 @@ public class Disposer extends ActionBarActivity implements ActionBar.TabListener
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if(!prefs.getBoolean("logged",false))
         {
+            finish();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
