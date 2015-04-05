@@ -210,6 +210,7 @@ public class MainActivity extends Activity {
 
         SuperToast.create(getApplicationContext(),getString(R.string.signed_in),SuperToast.Duration.MEDIUM,Style.getStyle(Style.GREEN, SuperToast.Animations.POPUP)).show();
 
+        finish();
         Intent intent = new Intent(MainActivity.this, Disposer.class);
         startActivity(intent);
 

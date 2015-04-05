@@ -365,7 +365,8 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     public void DeconnectUser()
     {
         prefs.edit().clear().apply();
-        Intent intent= new Intent(getActivity(), MainActivity.class);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        getActivity().finish();
         startActivity(intent);
     }
 
