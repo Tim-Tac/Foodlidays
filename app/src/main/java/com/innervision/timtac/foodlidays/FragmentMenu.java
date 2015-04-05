@@ -1,8 +1,10 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -54,8 +56,7 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     public static ArrayList<Article> liste_articles = new ArrayList<>();
 
     private String url_cat = UtilitiesConfig.url_base + UtilitiesConfig.URL_CAT;
-    String zip_code_temp = "1435";
-    private String url = UtilitiesConfig.url_base + UtilitiesConfig.URL_CAT_ZIPCODE + zip_code_temp;
+    private String url;
 
 
     /**
@@ -67,6 +68,10 @@ public class FragmentMenu extends Fragment implements AdapterView.OnItemSelected
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String zip = prefs.getString("session_zip","");
+        url = UtilitiesConfig.url_base + UtilitiesConfig.URL_CAT_ZIPCODE + zip;
 
         // Si pas de réseau
         if(!UtilitiesFunctions.isNetworkConnected(getActivity().getApplicationContext())) DisplayText(getString(R.string.no_connection));

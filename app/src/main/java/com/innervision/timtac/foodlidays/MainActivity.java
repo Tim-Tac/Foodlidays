@@ -38,11 +38,6 @@ public class MainActivity extends Activity {
     //UI declaration
     private EditText number;
     private EditText email;
-    private String semail;
-    private String snumber;
-
-    // résultats pour les scripts serveur
-    private String result;
 
 
     @Override
@@ -61,16 +56,14 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                semail = email.getText().toString();
-                snumber = number.getText().toString();
+                String semail = email.getText().toString();
+                String snumber = number.getText().toString();
 
-                if(!UtilitiesFunctions.isNetworkConnected(getApplicationContext()))
+                if(ValidForm(snumber,semail))
                 {
-                    UtilitiesFunctions.DisplayError(getString(R.string.connect_to_internet), MainActivity.this);
-                    return;
+                    new RequestToConnect().execute(url, snumber, semail);
                 }
 
-                ConnectUser(semail,snumber);
             }
         });
 
@@ -89,6 +82,30 @@ public class MainActivity extends Activity {
     }
 
 
+    public boolean ValidForm(String room, String email)
+    {
+        if(!UtilitiesFunctions.isNetworkConnected(getApplicationContext()))
+        {
+            UtilitiesFunctions.DisplayError(getString(R.string.connect_to_internet), MainActivity.this);
+            return false;
+        }
+
+        if(!AnyEmpty(room,email))
+        {
+            UtilitiesFunctions.DisplayError(getString(R.string.need_two_field), MainActivity.this);
+            return false;
+        }
+
+        if(!UtilitiesFunctions.isEmailValid(email))
+        {
+            UtilitiesFunctions.DisplayError(getString(R.string.email_invalid), MainActivity.this);
+            return false;
+        }
+
+        return true;
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -104,8 +121,9 @@ public class MainActivity extends Activity {
     public class RequestToConnect extends AsyncTask<String, Void, String>
     {
         @Override
-        protected String doInBackground(String... params) {
-
+        protected String doInBackground(String... params)
+        {
+            String res = null;
             try{
 
                 HttpClient httpclient = new DefaultHttpClient();
@@ -117,48 +135,26 @@ public class MainActivity extends Activity {
 
                 HttpResponse response = httpclient.execute(request);
                 BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-                result = in.readLine();
+                res = in.readLine();
                 in.close();
 
             }catch(Exception e){
                 Log.e("log_tag", "Error in http connection " + e.toString());
             }
-            return result;
+            return res;
+        }
+
+        @Override
+        protected void onPostExecute(String ligne)
+        {
+            super.onPostExecute(ligne);
+            ConnectUser(ligne);
         }
     }
 
 
-    public void ConnectUser(String semail, String snumber)
+    public void ConnectUser(String result)
     {
-
-        /*** validations des inputs *******************************************************/
-
-        //si un champs vide
-        if(!AnyEmpty(semail,snumber))
-        {
-            UtilitiesFunctions.DisplayError(getString(R.string.need_two_field), MainActivity.this);
-            return;
-        }
-
-        //si email pas valide
-        if(!UtilitiesFunctions.isEmailValid(semail))
-        {
-            UtilitiesFunctions.DisplayError(getString(R.string.email_invalid), MainActivity.this);
-            return;
-        }
-
-
-        /*** Tentative de connection ******************************************************/
-
-        try {
-            new RequestToConnect().execute(url, snumber, semail).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-
-        /*** Validation de la réponse *****************************************************/
-
         //si pas de réponse
         if(result == null)
         {
@@ -173,8 +169,6 @@ public class MainActivity extends Activity {
             return;
         }
 
-
-        /*** Récupération des infos et connection *****************************************/
 
         try {
 
