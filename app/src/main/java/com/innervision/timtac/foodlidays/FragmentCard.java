@@ -298,7 +298,8 @@ public class FragmentCard extends Fragment {
                     if(command.has("id") && command.has("status"))
                     {
                         myOrderArticles.clear();
-                        Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
+                        Disposer.mViewPager.setCurrentItem(2);
+                        FragmentProfil.Refresh(getActivity(),getString(R.string.error_network));
                         Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_LONG).show();
                     }
                     else Toast.makeText(getActivity(),getString(R.string.error_order),Toast.LENGTH_LONG).show();

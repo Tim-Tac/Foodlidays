@@ -44,7 +44,7 @@
     <string name="card_bank">Card</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
-    <string name="access_order">Access the status of your order in your profile !</string>
+    <string name="access_order">Access the status of your order here !</string>
     <string name="modify">Modify</string>
     <string name="delete">Delete</string>
     <string name="payment_method">Method of payment</string>

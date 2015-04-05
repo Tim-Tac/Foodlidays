@@ -44,7 +44,7 @@
     <string name="card_bank">Carte</string>
     <string name="title">Titre</string>
     <string name="description">Description</string>
-    <string name="access_order">Accéder au statut de votre commande dans votre profil !</string>
+    <string name="access_order">Accéder au statut de votre commande ici !</string>
     <string name="modify">Modifier</string>
     <string name="delete">Supprimer</string>
     <string name="payment_method">Méthode de payement</string>

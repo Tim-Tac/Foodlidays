@@ -1,6 +1,7 @@
 package com.innervision.timtac.foodlidays;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,10 +41,10 @@ import java.util.ArrayList;
 public class FragmentProfil extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static ArrayList<UtilitiesClass.Order> ordersWanted = new ArrayList<>();
-    private static ArrayList<UtilitiesClass.Order> allOrder = new ArrayList<>();
+    public static ArrayList<UtilitiesClass.Order> allOrder = new ArrayList<>();
     private ArrayList<String> order_status = new ArrayList<>();
-    private JSONArray jArrayOrder;
-    private SharedPreferences prefs;
+    private static JSONArray jArrayOrder;
+    private static SharedPreferences prefs;
 
     //UI declaration
     private TextView identifiant;
@@ -83,12 +84,22 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     public void RetrieveOrders()
     {
 
-        new GetAllOrdersForEmailFromServer().execute();
+        new GetAllOrdersForEmailFromServer(getActivity(),getString(R.string.error_network)).execute();
     }
 
 
-    public class GetAllOrdersForEmailFromServer extends AsyncTask<String, String, String>
+    public static class GetAllOrdersForEmailFromServer extends AsyncTask<String, String, String>
     {
+        Context c;
+        String s;
+
+        public GetAllOrdersForEmailFromServer(Context c, String s)
+        {
+            super();
+            this.c = c;
+            this.s = s;
+        }
+
         @Override
         protected String doInBackground(String... params) {
             String res = null;
@@ -112,12 +123,12 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
         protected void onPostExecute(String ligne)
         {
             super.onPostExecute(ligne);
-            FillAllOrders(ligne);
+            FillAllOrders(ligne,c,s);
         }
     }
 
 
-    public void FillAllOrders(String s)
+    public static void FillAllOrders(String s, Context c, String s2)
     {
         if(s != null)
         {
@@ -144,7 +155,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
                 }
             }
         }
-        else Toast.makeText(getActivity(),getString(R.string.error_network),Toast.LENGTH_LONG).show();
+        else Toast.makeText(c,s2,Toast.LENGTH_LONG).show();
     }
 
 
@@ -191,7 +202,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
             public void onClick(View v) {
 
                 SuperToast.create(getActivity(), getString(R.string.reloaded), SuperToast.Duration.VERY_SHORT, Style.getStyle(Style.GREEN, SuperToast.Animations.POPUP)).show();
-                Refresh();
+                Refresh(getActivity(),getString(R.string.error_network));
             }
         });
 
@@ -354,10 +365,10 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     }
 
 
-    public void Refresh()
+    public static void Refresh(Context c, String s)
     {
         allOrder.clear();
-        new GetAllOrdersForEmailFromServer().execute();
+        new GetAllOrdersForEmailFromServer(c,s).execute();
         Disposer.mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
