@@ -54,6 +54,8 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     private TextView ville;
     private TextView etage;
     private TextView numero;
+    private TextView name;
+    private TextView info_location;
     private Button deco;
     private TextView any_order;
     private LinearLayout info_command;
@@ -174,6 +176,8 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
         ville = (TextView)v.findViewById(R.id.ville);
         etage = (TextView)v.findViewById(R.id.etage);
         numero = (TextView)v.findViewById(R.id.numero);
+        name = (TextView)v.findViewById(R.id.name_place);
+        info_location = (TextView)v.findViewById(R.id.info_location);
         deco = (Button)v.findViewById(R.id.deco);
         any_order = (TextView)v.findViewById(R.id.any_command);
         info_command = (LinearLayout)v.findViewById(R.id.info_command);
@@ -217,8 +221,22 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
         adresse.setText(prefs.getString("session_street_address",""));
         zip.setText(prefs.getString("session_zip",""));
         ville.setText(prefs.getString("session_city",""));
-        etage.setText(prefs.getString("session_floor","") + getString(R.string.nd_floor_room) );
-        numero.setText(prefs.getString("session_room",""));
+
+        if(prefs.getString("session_type","").equals("room"))
+        {
+            info_location.setText(getString(R.string.dispaly_room_location));
+            etage.setText(prefs.getString("session_floor","") + getString(R.string.nd_floor_room) );
+            numero.setText(prefs.getString("session_room",""));
+            name.setVisibility(View.GONE);
+        }
+        else if(prefs.getString("session_type","").equals("place"))
+        {
+            info_location.setText(getString(R.string.dislay_place_location));
+            name.setText("\"" + prefs.getString("session_name_place","") + "\"");
+            etage.setVisibility(View.GONE);
+            numero.setVisibility(View.GONE);
+        }
+
     }
 
 
@@ -376,6 +394,7 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
     public void DeconnectUser()
     {
         prefs.edit().clear().apply();
+        SuperToast.create(getActivity(), getString(R.string.signed_out), SuperToast.Duration.SHORT, Style.getStyle(Style.ORANGE, SuperToast.Animations.FLYIN)).show();
         Intent intent = new Intent(getActivity(), MainActivity.class);
         getActivity().finish();
         startActivity(intent);

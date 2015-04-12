@@ -61,4 +61,6 @@
     <string name="reloaded">rafraichi</string>
     <string name="sub_total">Sous-total : </string>
     <string name="manag_fee">Frais de gestion : </string>
+    <string name="dislay_place_location">Localisation de la place :</string>
+    <string name="signed_out">Déconnecté</string>
 </resources>

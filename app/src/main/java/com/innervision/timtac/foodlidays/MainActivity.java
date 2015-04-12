@@ -184,19 +184,26 @@ public class MainActivity extends Activity {
             }
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-
+            prefs.edit().putBoolean("logged",true).apply();
             prefs.edit().putString("session_email", object.getString("email")).apply();
             prefs.edit().putString("session_type", object.getString("place_type")).apply();
             prefs.edit().putString("session_id", object2.getString("id")).apply();
-            prefs.edit().putString("session_room_number", object2.getString("room_number")).apply();
-            prefs.edit().putString("session_floor", object2.getString("floor")).apply();
-            prefs.edit().putString("session_room", object2.getString("room")).apply();
             prefs.edit().putString("session_user_id", object2.getString("user_id")).apply();
             prefs.edit().putString("session_street_address", object2.getString("street_address")).apply();
             prefs.edit().putString("session_city", object2.getString("city")).apply();
             prefs.edit().putString("session_country", object2.getString("country")).apply();
             prefs.edit().putString("session_zip", object2.getString("zip")).apply();
-            prefs.edit().putBoolean("logged",true).apply();
+            prefs.edit().putString("session_room_number", object2.getString("room_number")).apply();
+
+            if(object.getString("place_type").equals("place"))
+            {
+                prefs.edit().putString("session_name_place", object2.getString("name")).apply();
+            }
+            else if(object.getString("place_type").equals("room"))
+            {
+                prefs.edit().putString("session_floor", object2.getString("floor")).apply();
+                prefs.edit().putString("session_room", object2.getString("room")).apply();
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

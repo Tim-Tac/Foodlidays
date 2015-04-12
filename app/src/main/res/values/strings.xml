@@ -61,4 +61,6 @@
     <string name="reloaded">refreshed</string>
     <string name="sub_total">Sub total :</string>
     <string name="manag_fee">Management fee :</string>
+    <string name="dislay_place_location">Place\'s location :</string>
+    <string name="signed_out">Signed out</string>
 </resources>

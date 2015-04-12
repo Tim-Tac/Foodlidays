@@ -69,7 +69,8 @@
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dispaly_room_location"/>
+                    android:text=""
+                    android:id="@+id/info_location"/>
 
             </LinearLayout>
 
@@ -129,13 +130,21 @@
                     android:layout_marginLeft="5dp"
                     android:text=""/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name_place"
+                    android:textSize="16sp"
+                    android:textStyle="italic"
+                    android:text=""/>
+
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:background="@drawable/edit_text_login"
-                android:layout_marginTop="40dp"/>
+                android:layout_marginTop="20dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
