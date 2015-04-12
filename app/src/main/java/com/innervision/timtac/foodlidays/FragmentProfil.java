@@ -23,10 +23,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.Style;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -132,6 +130,8 @@ public class FragmentProfil extends Fragment implements AdapterView.OnItemSelect
 
     public static void FillAllOrders(String s, Context c, String s2)
     {
+        allOrder.clear();
+
         if(s != null)
         {
             if(s.length() > 50)

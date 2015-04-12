@@ -195,14 +195,26 @@ public class FragmentCard extends Fragment {
         String type_room = prefs.getString("session_type","");
         String email = prefs.getString("session_email","");
         String room_number = prefs.getString("session_room_number","");
-        String id_room = prefs.getString("session_id","");
+        String id_room = prefs.getString("session_user_id","");
         String city = prefs.getString("session_city","");
         String zip = prefs.getString("session_zip","");
         String country = prefs.getString("session_country","");
         String address = prefs.getString("session_street_address","");
-        String id_user = prefs.getString("session_user_id","");
-        String floor = prefs.getString("session_floor","");
-        String room = prefs.getString("session_room","");
+        String id_user = prefs.getString("session_id","");
+
+        String room = "";
+        String floor = "";
+        if(prefs.getString("session_type","").equals("place"))
+        {
+            floor = "0";
+            room = "0";
+        }
+        else if(prefs.getString("session_type","").equals("room"))
+        {
+            floor = prefs.getString("session_floor","");
+            room = prefs.getString("session_room","");
+        }
+
         String method;
         if(cash) method = "cash";
         else method = "card";
@@ -257,22 +269,24 @@ public class FragmentCard extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             String result = null;
-            try{
-
+            try
+            {
                 HttpClient httpclient = new DefaultHttpClient();
+                Log.i("ORDER", params[1]);
                 HttpPost request = new HttpPost(params[0]);
                 List<NameValuePair> nameValuePairs = new ArrayList<>(2);
                 nameValuePairs.add(new BasicNameValuePair("order", params[1]));
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
                 HttpResponse response = httpclient.execute(request);
                 BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
                 result = in.readLine();
                 in.close();
-
-            }catch(Exception e){
+            }
+            catch(Exception e)
+            {
                 Log.e("log_tag", "Error in http connection " + e.toString());
             }
+            Log.i("ORDER RESPONSE",result);
             return result;
         }
 
@@ -298,9 +312,9 @@ public class FragmentCard extends Fragment {
                     if(command.has("id") && command.has("status"))
                     {
                         myOrderArticles.clear();
+                        Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_LONG).show();
                         Disposer.mViewPager.setCurrentItem(2);
                         FragmentProfil.Refresh(getActivity(),getString(R.string.error_network));
-                        Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_LONG).show();
                     }
                     else Toast.makeText(getActivity(),getString(R.string.error_order),Toast.LENGTH_LONG).show();
                 }
@@ -309,9 +323,9 @@ public class FragmentCard extends Fragment {
                 }
 
             }
-            else Toast.makeText(getActivity(),getString(R.string.error_network),Toast.LENGTH_SHORT).show();
+            else Toast.makeText(getActivity(),getString(R.string.error_network) + "2" ,Toast.LENGTH_SHORT).show();
         }
-        else Toast.makeText(getActivity(),getString(R.string.error_network),Toast.LENGTH_SHORT).show();
+        else Toast.makeText(getActivity(),getString(R.string.error_network) + "1",Toast.LENGTH_SHORT).show();
 
     }
 
