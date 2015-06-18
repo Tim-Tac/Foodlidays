@@ -21,6 +21,7 @@
 
         <activity
             android:name=".Disposer"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/DisposerTheme"
             android:configChanges="orientation|screenSize">
