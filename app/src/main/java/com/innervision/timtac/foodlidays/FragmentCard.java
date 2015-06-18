@@ -303,19 +303,19 @@ public class FragmentCard extends Fragment {
     {
         if(s != null)
         {
-            /*if(s.length() > 30)
+            if(s.length() > 30)
             {
                 try
                 {
                     JSONObject command = new JSONObject(s);
 
                     if(command.has("id") && command.has("status"))
-                    {*/
+                    {
                         myOrderArticles.clear();
                         Toast.makeText(getActivity(),getString(R.string.access_order),Toast.LENGTH_LONG).show();
                         Disposer.mViewPager.setCurrentItem(2);
                         FragmentProfil.Refresh(getActivity(),getString(R.string.error_network));
-                    /*}
+                    }
                     else Toast.makeText(getActivity(),getString(R.string.error_order),Toast.LENGTH_LONG).show();
                 }
                 catch (JSONException e) {
@@ -323,7 +323,7 @@ public class FragmentCard extends Fragment {
                 }
 
             }
-            else Toast.makeText(getActivity(),getString(R.string.error_network) + "2" ,Toast.LENGTH_SHORT).show();*/
+            else Toast.makeText(getActivity(),getString(R.string.error_network) + "2" ,Toast.LENGTH_SHORT).show();
         }
         else Toast.makeText(getActivity(),getString(R.string.error_network) + "1",Toast.LENGTH_SHORT).show();
 
